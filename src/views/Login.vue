@@ -1,0 +1,424 @@
+<template>
+  <div class="container mt-5">
+    <!-- 表單資料 🥞-->
+    <el-form ref="addBank_Form" :model="addForm_Data" :rules="rules" class="demo-ruleForm d-flex flex-column align-items-center justify-content-center">
+      <img :src="logoSrc" alt="#" style="width: 200px; height: 200px; border-radius: 50%" />
+      <p class="mt-5 text-white fs-2">歡迎回來 !</p>
+      <!-- 帳號 -->
+      <el-form-item label="帳號" prop="phone" class="addInput_style">
+        <el-input class="contentName_style" v-model="addForm_Data.phone" placeholder="請輸入"></el-input>
+      </el-form-item>
+      <!-- 密碼 -->
+      <el-form-item label="密碼" prop="password" class="addInput_style">
+        <el-input class="contentName_style" v-model="addForm_Data.password" placeholder="請輸入" type="password"></el-input>
+        <!-- <i class="fa-regular fa-copy text-yellow" @click="copy()" @keydown="copy()"></i> -->
+      </el-form-item>
+      <!-- 驗證碼 -->
+      <div class="d-flex align-items-center">
+        <el-form-item label="驗證碼" prop="captcha" class="captchaInput_style">
+          <el-input class="contentName_style" v-model="addForm_Data.captcha" placeholder="請輸入"></el-input>
+          <!-- <i class="fa-regular fa-copy text-yellow" @click="copy()" @keydown="copy()"></i> -->
+        </el-form-item>
+        <div @click="reload_Captcha()" @keydown="reload_Captcha()">
+          <img v-if="isRouterAlive" :src="`/captcha.svg?=${new Date().getTime()}`" alt="#" />
+        </div>
+      </div>
+      <!-- google驗證碼 -->
+      <el-form-item v-if="isGoogleLogin === true" label="Google驗證碼" prop="googleVerifyCode" class="addInput_style">
+        <el-input class="contentName_style" v-model="addForm_Data.googleVerifyCode" placeholder="請輸入" type="password"></el-input>
+      </el-form-item>
+
+      <a v-if="isGoogleLogin === null" href="#" class="px-5" @click.prevent="login()">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        登入
+      </a>
+      <a v-if="isGoogleLogin === false" href="#" class="px-5" @click.prevent="login()">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        登入
+      </a>
+      <a v-if="isGoogleLogin === true" href="#" class="px-5" @click.prevent="login_withGoogle()">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        登入
+      </a>
+    </el-form>
+  </div>
+</template>
+
+<script>
+import _ from 'lodash';
+
+export default {
+  provide() {
+    return {
+      reload_captcha: this.reload_Captcha,
+    };
+  },
+  data() {
+    return {
+      isRouterAlive: true,
+      //   登入資料(無須google驗證碼)
+      addForm_Data: {
+        phone: '',
+        password: '',
+        captcha: '',
+        googleVerifyCode: null,
+      },
+      // logo src
+      logoSrc: '',
+      // google驗證碼
+      googleForm_data: {
+        phone: '',
+      },
+      // 是否有需要輸入google驗證碼
+      isGoogleLogin: null,
+      // 登入表單規則
+      rules: {
+        phone: [
+          //   {
+          //     type: 'number',
+          //     validator: checkBet_value, // 驗證質押金額範圍
+          //     trigger: 'blur',
+          //     // message: '委託金額需大於0,不可超過可用餘額',
+          //   },
+          {
+            required: true,
+            message: '請輸入帳號',
+            trigger: 'blur',
+          },
+        ],
+
+        password: [
+          {
+            required: true,
+            message: '請輸入密碼',
+            trigger: 'blur',
+          },
+        ],
+
+        captcha: [
+          {
+            required: true,
+            message: '請輸入驗證碼',
+            trigger: 'blur',
+          },
+        ],
+      },
+      // 錯誤訊息
+      wrongMsg: {
+        phone: '',
+        password: '',
+        captcha: '',
+        googleVerifyCode: '',
+      },
+    };
+  },
+  methods: {
+    getSiteInfo() {
+      this.$http.get('/open/siteInfo').then((res) => {
+        console.log(res.data.data);
+        this.logoSrc = res.data.data.logo;
+      });
+    },
+    checkGoogleLogin() {
+      this.$http.post('/open/checkIsGoogleLogin', this.googleForm_data).then((res) => {
+        console.log(res.data.data);
+        this.isGoogleLogin = res.data.data.isGoogleLogin;
+      });
+    },
+    login() {
+      this.googleForm_data.phone = this.addForm_Data.phone;
+      this.checkGoogleLogin();
+      this.$http.post('/open/login', this.addForm_Data).then((res) => {
+        const loginMsg = res.data.msg;
+        console.log(this.isGoogleLogin, '驗證碼是否啟動');
+        // this.checkGoogleLogin();
+        if (this.isGoogleLogin === false) {
+          if (res.data.code === 200) {
+            console.log(res.data.msg);
+            this.$swal.fire('登入成功!', '登入成功', 'success');
+            // localStorage.setItem('user', this.addForm_Data);
+            this.$router.push('/');
+          } else if (res.data.code === 422) {
+            this.wrongMsg.phone = _.findKey(loginMsg, ['param', 'phone']);
+            console.log(this.wrongMsg.phone);
+            if (this.wrongMsg.phone !== undefined) {
+              this.$swal.fire('登入失敗!', `${res.data.msg.phone.msg}`, 'error');
+            }
+            this.wrongMsg.password = _.findKey(loginMsg, ['param', 'password']);
+            console.log(this.wrongMsg.password);
+            if (this.wrongMsg.password !== undefined) {
+              this.$swal.fire('登入失敗!', `${res.data.msg.password.msg}`, 'error');
+            }
+            this.wrongMsg.captcha = _.findKey(loginMsg, ['param', 'captcha']);
+            console.log(this.wrongMsg.captcha);
+            if (this.wrongMsg.captcha !== undefined) {
+              this.$swal.fire('登入失敗!', `${res.data.msg.captcha.msg}`, 'error');
+            } else if (res.data.code === 500) {
+              console.log(res.data.msg);
+              this.$swal.fire('登入失敗!', `${res.data.msg}`, 'error');
+            }
+            this.reload_Captcha();
+          } else {
+            console.log(res.data.msg);
+            this.$swal.fire('登入失敗!', `${res.data.msg}`, 'error');
+            this.reload_Captcha();
+          }
+        } else {
+          console.log(this.isGoogleLogin, '啟動');
+          this.isGoogleLogin = true;
+        }
+
+        // this.reload_Captcha();
+      });
+
+      // this.isGoogleLogin = true;
+      // console.log('需要google驗證碼登入');
+    },
+    // 含有google驗證登入
+    login_withGoogle() {
+      this.$http.post('/open/login', this.addForm_Data).then((res) => {
+        const loginMsg = res.data.msg;
+        // this.checkGoogleLogin();
+        if (res.data.code === 200) {
+          console.log(res.data.msg);
+          this.$swal.fire('登入成功!', '登入成功', 'success');
+          // localStorage.setItem('user', this.addForm_Data);
+          this.$router.push('/');
+        } else if (res.data.code === 422) {
+          this.wrongMsg.phone = _.findKey(loginMsg, ['param', 'phone']);
+          console.log(this.wrongMsg.phone);
+          if (this.wrongMsg.phone !== undefined) {
+            this.$swal.fire('登入失敗!', `${res.data.msg.phone.msg}`, 'error');
+          }
+          this.wrongMsg.password = _.findKey(loginMsg, ['param', 'password']);
+          console.log(this.wrongMsg.password);
+          if (this.wrongMsg.password !== undefined) {
+            this.$swal.fire('登入失敗!', `${res.data.msg.password.msg}`, 'error');
+          }
+          this.wrongMsg.captcha = _.findKey(loginMsg, ['param', 'captcha']);
+          console.log(this.wrongMsg.captcha);
+          if (this.wrongMsg.captcha !== undefined) {
+            this.$swal.fire('登入失敗!', `${res.data.msg.captcha.msg}`, 'error');
+          }
+          this.wrongMsg.googleVerifyCode = _.findKey(loginMsg, ['param', 'googleVerifyCode']);
+          console.log(this.wrongMsg.googleVerifyCode);
+          if (this.wrongMsg.googleVerifyCode !== undefined) {
+            this.$swal.fire('登入失敗!', `${res.data.msg.googleVerifyCode.msg}`, 'error');
+          }
+          this.reload_Captcha();
+        } else {
+          console.log(res.data.msg);
+          this.$swal.fire('登入失敗!', `${res.data.msg}`, 'error');
+          this.reload_Captcha();
+        }
+      });
+    },
+    reflesh_captcha() {
+      this.$http.get(`/captcha.svg?=${new Date().getTime()}`).then((res) => {
+        console.log(res.img);
+      });
+    },
+    // 重新整理
+    reload_Captcha() {
+      this.isRouterAlive = false;
+      this.$nextTick(() => {
+        // 刷新後執行
+        this.isRouterAlive = true;
+        this.reflesh_captcha();
+      });
+    },
+  },
+  created() {
+    this.reflesh_captcha();
+    this.getSiteInfo();
+  },
+};
+</script>
+
+<style lang="scss" scoped>
+.demo-ruleForm {
+  background: linear-gradient(#113f46, #818283);
+  padding: 100px 0;
+  margin: 0 200px;
+  border-radius: 50px;
+  & a {
+    position: relative;
+    display: inline-block;
+    padding: 10px 20px;
+    color: #03e9f4;
+    font-size: 16px;
+    text-decoration: none;
+    text-transform: uppercase;
+    overflow: hidden;
+    transition: 0.5s;
+    margin-top: 40px;
+    letter-spacing: 4px;
+  }
+  & a:hover {
+    background: #03e9f4;
+    color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 0 5px #03e9f4, 0 0 25px #03e9f4, 0 0 50px #03e9f4, 0 0 100px #03e9f4;
+  }
+  & a span {
+    position: absolute;
+    display: block;
+  }
+  & a span:nth-child(1) {
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #03e9f4);
+    animation: btn-anim1 1s linear infinite;
+  }
+  & a span:nth-child(2) {
+    top: -100%;
+    right: 0;
+    width: 2px;
+    height: 100%;
+    background: linear-gradient(180deg, transparent, #03e9f4);
+    animation: btn-anim2 1s linear infinite;
+    animation-delay: 0.25s;
+  }
+  & a span:nth-child(3) {
+    bottom: 0;
+    right: -100%;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(270deg, transparent, #03e9f4);
+    animation: btn-anim3 1s linear infinite;
+    animation-delay: 0.5s;
+  }
+  & a span:nth-child(4) {
+    bottom: -100%;
+    left: 0;
+    width: 2px;
+    height: 100%;
+    background: linear-gradient(360deg, transparent, #03e9f4);
+    animation: btn-anim4 1s linear infinite;
+    animation-delay: 0.75s;
+  }
+  @keyframes btn-anim1 {
+    0% {
+      left: -100%;
+    }
+    50%,
+    100% {
+      left: 100%;
+    }
+  }
+  @keyframes btn-anim2 {
+    0% {
+      top: -100%;
+    }
+    50%,
+    100% {
+      top: 100%;
+    }
+  }
+  @keyframes btn-anim3 {
+    0% {
+      right: -100%;
+    }
+    50%,
+    100% {
+      right: 100%;
+    }
+  }
+  @keyframes btn-anim4 {
+    0% {
+      bottom: -100%;
+    }
+    50%,
+    100% {
+      bottom: 100%;
+    }
+  }
+}
+.addInput_style {
+  display: block; //el-form-item的標題顯示再輸入框上面
+  // & .el-select {
+  //   & {
+  //     :deep(.el-input__wrapper.is-focus) {
+  //       box-shadow: 0 0 0 1px #faa30d inset !important;
+  //     }
+  //   }
+  // }
+  & :deep(.el-form-item__label) {
+    display: flex;
+    justify-content: flex-start;
+  }
+  & :deep(.el-input__wrapper) {
+    padding: 0;
+    border-radius: 10px;
+  }
+  & :deep(.el-input__inner) {
+    background: #f9fafb;
+    padding-left: 10px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    width: 400px;
+    border-radius: 10px;
+  }
+  // 輸入框選取樣式
+  & :deep(.el-input__inner:focus) {
+    border: #faa30d 1px solid !important;
+    transition: 0.6s;
+    box-shadow: 5px 5px 28px -2px rgba(250, 163, 13, 0.78);
+    -webkit-box-shadow: 5px 5px 28px -2px rgba(250, 163, 13, 0.78);
+    -moz-box-shadow: 5px 5px 28px -2px rgba(250, 163, 13, 0.78);
+  }
+  // 輸入框border樣式
+  & :deep(.el-form-item__label) {
+    color: rgb(255, 255, 255);
+  }
+}
+.captchaInput_style {
+  display: block; //el-form-item的標題顯示再輸入框上面
+  // & .el-select {
+  //   & {
+  //     :deep(.el-input__wrapper.is-focus) {
+  //       box-shadow: 0 0 0 1px #faa30d inset !important;
+  //     }
+  //   }
+  // }
+  & :deep(.el-form-item__label) {
+    display: flex;
+    justify-content: flex-start;
+  }
+  & :deep(.el-input__wrapper) {
+    padding: 0;
+    border-radius: 10px;
+  }
+  & :deep(.el-input__inner) {
+    background: #f9fafb;
+    padding-left: 10px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    width: 250px;
+    border-radius: 10px;
+  }
+  // 輸入框選取樣式
+  & :deep(.el-input__inner:focus) {
+    border: #faa30d 1px solid !important;
+    transition: 0.6s;
+    box-shadow: 5px 5px 28px -2px rgba(250, 163, 13, 0.78);
+    -webkit-box-shadow: 5px 5px 28px -2px rgba(250, 163, 13, 0.78);
+    -moz-box-shadow: 5px 5px 28px -2px rgba(250, 163, 13, 0.78);
+  }
+  // 輸入框border樣式
+  & :deep(.el-form-item__label) {
+    color: rgb(255, 255, 255);
+  }
+}
+</style>
