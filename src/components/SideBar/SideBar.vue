@@ -1,6 +1,7 @@
 <template>
   <header class="main-head" :class="[isExpand === false ? 'main_expand' : 'main-head']">
-    <img class="home_logo" :src="logoSrc" alt="#" />
+    <img v-if="isExpand === true" class="home_logo" :src="logoSrc" alt="#" />
+    <img v-if="isExpand === false" class="home_logo_close" :src="logoSrc" alt="#" />
     <hr class="mt-0 horizontal dark bg-white" style="height: 2px" />
     <nav class="head-nav">
       <ul class="menu">
@@ -61,6 +62,7 @@ export default defineComponent({
   components: {
     QrcodeVue,
   },
+  emits: ['getIfWidth'],
   setup() {
     const handleOpen = (key, keyPath) => {
       console.log(key, keyPath);
@@ -98,6 +100,7 @@ export default defineComponent({
       google_code: '', // 重新獲取驗證碼
       size: 200, // qr碼大小
       isGoogleOn: { isLoginGoogleVerify: '' }, // 驗證登入
+      // ConKey: '我是子组件传给父级的内容',
     };
   },
   methods: {
@@ -107,8 +110,10 @@ export default defineComponent({
     clickExpand() {
       if (this.isExpand === true) {
         this.isExpand = false;
+        this.$emit('changeWidth', this.isExpand);
       } else {
         this.isExpand = true;
+        this.$emit('changeWidth', this.isExpand);
       }
     },
     clickScript(index) {
@@ -331,7 +336,7 @@ $pad: 0.925rem;
     }
   }
   //Logo隱藏
-  & img {
+  & .home_logo {
     visibility: hidden;
   }
   & .list_name {
@@ -347,6 +352,16 @@ $pad: 0.925rem;
   border-radius: 10px;
   width: 100px;
   margin: 24px 25px 24px 40px;
+  background: black;
+  box-shadow: -1px 1px 24px 4px var(--logo-shadow-color);
+  -webkit-box-shadow: -1px 1px 24px 4px var(--logo-shadow-color);
+  -moz-box-shadow: -1px 1px 24px 4px var(--logo-shadow-color);
+}
+.home_logo_close {
+  border-radius: 10px;
+  width: 50px;
+  margin: 50px 0;
+  // margin-right: 50px;
   background: black;
   box-shadow: -1px 1px 24px 4px var(--logo-shadow-color);
   -webkit-box-shadow: -1px 1px 24px 4px var(--logo-shadow-color);

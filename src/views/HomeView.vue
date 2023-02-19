@@ -1,7 +1,7 @@
 <template>
   <div class="common-layout">
     <el-container>
-      <el-aside width="250px"><SideBar></SideBar></el-aside>
+      <el-aside :class="[widthLong === false ? 'isShort' : '']" width="250px"><SideBar @changeWidth="clickExpand"></SideBar></el-aside>
       <el-container>
         <el-header><HeadBar></HeadBar></el-header>
         <el-main><router-view></router-view></el-main>
@@ -16,12 +16,21 @@ import SideBar from '../components/SideBar/SideBar.vue';
 import HeadBar from '../components/HeadBar/HeadBar.vue';
 
 export default {
+  props: {},
   components: {
     SideBar,
     HeadBar,
   },
   data() {
-    return {};
+    return {
+      widthLong: '',
+    };
+  },
+  methods: {
+    clickExpand(val) {
+      console.log('子组件向爸爸传来的值', val);
+      this.widthLong = val;
+    },
   },
 };
 </script>
@@ -35,5 +44,8 @@ export default {
 }
 .el-main {
   padding: 60px;
+}
+.isShort {
+  width: 100px;
 }
 </style>

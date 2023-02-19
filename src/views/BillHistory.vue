@@ -30,7 +30,7 @@
                 </el-form-item>
                 <!-- 選擇日期 -->
                 <el-form-item label="選擇日期 :" class="thirdPay_style me-5" prop="timeValue">
-                  <el-date-picker v-model="timeValue" type="date" placeholder="Pick a month" />
+                  <el-date-picker v-model="timeValue" type="date" placeholder="選擇日期" />
                 </el-form-item>
                 <!-- 收款帳號 -->
                 <!-- <el-form-item label="收款帳號 :" class="thirdPay_style me-5" prop="id">

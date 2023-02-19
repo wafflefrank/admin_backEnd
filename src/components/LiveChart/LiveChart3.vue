@@ -1,5 +1,5 @@
 <template v-if="isRouterAlive">
-  <div style="max-width: 2000px; height: 700px" :key="key">
+  <div style="height: 500px" :key="key">
     <vue3-chart-js v-bind="{ ...lineChart }" />
   </div>
 </template>
@@ -141,7 +141,7 @@ export default {
             // 顯示Y1軸名稱
             title: {
               display: true,
-              text: '營業額',
+              text: '代收總量',
               color: 'white',
               align: 'center',
             },
@@ -200,7 +200,7 @@ export default {
         // 下方2樣標籤
         datasets: [
           {
-            label: '營業額',
+            label: '代收總量',
             backgroundColor: ['#fff'], // 標點顏色
             pointBorderWidth: 2.5, // 標點外框粗細
             borderWidth: 5, // 曲線外框粗細

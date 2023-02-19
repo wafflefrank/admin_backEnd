@@ -18,12 +18,12 @@
               </div>
               <div>
                 <div class="text-start">
-                  <p class="mb-0 fs-5 text-sm font-weight-bold fw-bold">商戶ID : {{ this.memberID }}</p>
+                  <p class="mb-0 fs-6 text-sm font-weight-bold fw-bold">商戶ID : {{ this.memberID }}</p>
                   <div class="d-flex align-items-center">
-                    <p class="mb-0 fs-5 text-sm font-weight-bold fw-bold">密鑰 :</p>
+                    <p class="mb-0 fs-6 text-sm font-weight-bold fw-bold">密鑰 :</p>
                     <span class="ms-2 fw-bold">******</span>
                   </div>
-                  <el-button class="invite_friend_btn mt-1 px-5 fw-bold" color="#faa30d" size="default" @click="centerDialogVisible = true">查看密鑰</el-button>
+                  <el-button class="check_key_btn mt-1 px-2 fw-bold" color="#faa30d" size="default" @click="centerDialogVisible = true">查看密鑰</el-button>
 
                   <!-- 密鑰彈窗 -->
                   <el-dialog class="key_style" v-model="centerDialogVisible" title="密鑰" width="30%" center>
@@ -288,8 +288,8 @@ export default {
   border: 0;
 }
 .merchant-icon {
-  width: 60px;
-  height: 60px;
+  max-width: 50px;
+  max-height: 50px;
   background-position: 50%;
   border-radius: 50%;
   display: flex;
@@ -407,4 +407,6 @@ export default {
   height: 0px !important;
   background-color: transparent !important;
 }
+// .check_key_btn {
+// }
 </style>

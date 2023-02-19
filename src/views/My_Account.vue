@@ -12,10 +12,10 @@
             </div>
             <div class="">
               <div class="numbers">
-                <p class="mb-0 text-sm text-uppercase font-weight-bold">可結算</p>
-                <h5 class="font-weight-bolder">${{ this.OrderTotal.billAmount_able }}</h5>
+                <p class="mb-3 text-sm text-uppercase font-weight-bold fs-4">可結算</p>
+                <h4 class="font-weight-bolder">${{ this.OrderTotal.billAmount_able }}</h4>
 
-                <span class="text-sm text-success">+55%</span> since yesterday
+                <!-- <span class="text-sm text-success">+55%</span> since yesterday -->
               </div>
             </div>
           </div>
@@ -33,9 +33,9 @@
             </div>
             <div>
               <div class="numbers">
-                <p class="mb-0 text-sm text-uppercase font-weight-bold">今日待出款</p>
-                <h5 class="font-weight-bolder">${{ this.lockedAmount }}</h5>
-                <span class="text-sm text-success fw-bold">+3%</span> since last week
+                <p class="mb-3 text-sm text-uppercase font-weight-bold fs-4">今日待出款</p>
+                <h4 class="font-weight-bolder">${{ this.lockedAmount }}</h4>
+                <!-- <span class="text-sm text-success fw-bold">+3%</span> since last week -->
               </div>
             </div>
           </div>
@@ -53,9 +53,9 @@
             </div>
             <div class="">
               <div class="numbers">
-                <p class="mb-0 text-sm text-uppercase font-weight-bold">本月交易額</p>
-                <h5 class="font-weight-bolder">${{ this.OrderTotal.monthTotal }}</h5>
-                <span class="text-sm text-danger">-2%</span> since last quarter
+                <p class="mb-3 text-sm text-uppercase font-weight-bold fs-4">本月交易額</p>
+                <h4 class="font-weight-bolder">${{ this.OrderTotal.monthTotal }}</h4>
+                <!-- <span class="text-sm text-danger">-2%</span> since last quarter -->
               </div>
             </div>
           </div>
@@ -73,9 +73,9 @@
             </div>
             <div class="">
               <div class="numbers">
-                <p class="mb-0 text-sm text-uppercase font-weight-bold">本月比數</p>
-                <h5 class="font-weight-bolder">{{ this.ThisMonthNums }}</h5>
-                <span class="text-sm text-success">+5%</span> than last month
+                <p class="mb-3 text-sm text-uppercase font-weight-bold fs-4">本月筆數</p>
+                <h4 class="font-weight-bolder">{{ this.ThisMonthNums }}</h4>
+                <!-- <span class="text-sm text-success">+5%</span> than last month -->
               </div>
             </div>
           </div>
@@ -84,7 +84,7 @@
     </div>
   </div>
   <div class="row">
-    <div class="col-12 col-lg-8 col-xl-8">
+    <div class="col-12 col-lg-12 col-xl-12">
       <div class="card_barStyle radius-10 p-3">
         <div class="d-flex align-items-center justify-content-between">
           <h2 class="text-white d-flex flex-start my-4">訂單營業額統計圖</h2>
@@ -97,14 +97,14 @@
           <div class="d-flex align-items-center">
             <p class="mb-0 fs-4 text-light me-5">今日交易額</p>
             <h5 class="mb-0">
-              974 <span class="text-white font-13">56% <i class="bx bx-up-arrow-alt"></i></span>
+              <span class="text-white font-13">{{ this.todayOrder_amount }}<span class="fs-6">元</span></span>
             </h5>
           </div>
           <div class="vr"></div>
           <div class="d-flex align-items-center">
             <p class="mb-0 fs-4 text-light me-5">今日訂單量</p>
             <h5 class="mb-0">
-              1,218 <span class="text-white font-13">34% <i class="bx bx-down-arrow-alt"></i></span>
+              <span class="text-white font-13">{{ this.todayOrder_count }}<span class="fs-6">元</span></span>
             </h5>
           </div>
         </div>
@@ -113,11 +113,11 @@
         </div>
       </div>
     </div>
-    <div class="col-12 col-lg-8 col-xl-4">
+    <!-- <div class="col-12 col-lg-8 col-xl-4">
       <div class="card_barStyle radius-10 p-5">
         <PieChart></PieChart>
       </div>
-    </div>
+    </div> -->
   </div>
   <!-- 結算彈窗 -->
   <el-dialog class="billModel_style" v-model="billVisible" title="確定結算" width="50%" center>
@@ -176,7 +176,7 @@
 import moment from 'moment';
 import _ from 'lodash';
 import { ElMessage } from 'element-plus';
-import PieChart from '../components/LiveChart/PieChart.vue';
+// import PieChart from '../components/LiveChart/PieChart.vue';
 import LiveChart from '../components/LiveChart/LiveChart3.vue';
 // 千分位
 const comma = /\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g;
@@ -186,7 +186,7 @@ const nowTime = moment(new Date()).format();
 export default {
   components: {
     LiveChart,
-    PieChart,
+    // PieChart,
   },
   provide() {
     return {
@@ -258,6 +258,17 @@ export default {
         payMethodId: null,
         merchantId: null,
       },
+      // 查詢當日的交易額
+      dailyOrder: {
+        startAt: '1',
+        endAt: '2022-12',
+        payMethodId: null,
+        merchantId: null,
+      },
+      // 今日交易額
+      todayOrder_amount: '',
+      // 今日訂單量
+      todayOrder_count: '',
       // 下發手續費
       xfFee: '',
     };
@@ -406,6 +417,23 @@ export default {
         console.log(this.ThisMonthNums);
       });
     },
+    // 獲取今日交易額 & 訂單量
+    getDailyReport() {
+      this.dailyOrder.startAt = moment(nowTime).utc().format();
+      this.dailyOrder.endAt = moment(nowTime).utc().format();
+      console.log(this.dailyOrder.startAt);
+      this.$http.post('/api/getMyOrderDailyReport', this.dailyOrder).then((res) => {
+        console.log(res.data);
+        if (res.data.data.length === 0) {
+          this.todayOrder_amount = 0;
+          this.todayOrder_count = 0;
+        } else {
+          this.todayOrder_amount = res.data.data[0].totalAmount.toString().replace(comma, ',');
+          this.todayOrder_count = res.data.data[0].orderCount.toString().replace(comma, ',');
+          console.log(this.ThisMonthNums);
+        }
+      });
+    },
     // 重新整理圖表
     reload_lineChart() {
       this.isRouterAlive = false;
@@ -424,6 +452,7 @@ export default {
     this.getBankList();
     console.log(nowTime);
     this.getThisMonth();
+    this.getDailyReport();
   },
 };
 </script>
