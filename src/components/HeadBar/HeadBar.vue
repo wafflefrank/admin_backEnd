@@ -9,7 +9,36 @@
           > -->
           <el-switch class="dark_switch" :class="[isDark === true ? 'dark_switch' : 'white_switch']" v-model="isDark" style="--el-switch-on-color: #f2f2f2; --el-switch-off-color: #2c2c2c" @change="toggleMode(isDark)" />
         </div>
-        <el-dropdown class="ms-3" size="small">
+        <el-dropdown class="ms-3" trigger="click">
+          <span class="el-dropdown-link text-white">
+            {{ this.radio }}
+            <el-icon class="el-icon--right">
+              <arrow-down />
+            </el-icon>
+          </span>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item @click="tw_version()"
+                ><img src="../../assets/flag/zh_TW.jpeg" alt="#" class="language_img me-2" /><span>{{ this.$t('Traditional_Chinese') }}</span></el-dropdown-item
+              >
+              <el-dropdown-item @click="cn_version()"
+                ><img src="../../assets/flag/zh_CN.jpeg" alt="#" class="language_img me-2" /><span>{{ this.$t('Simplified_Chinese') }}</span></el-dropdown-item
+              >
+              <el-dropdown-item @click="en_version()"
+                ><img src="../../assets/flag/en_US.jpeg" alt="#" class="language_img me-2" /><span>{{ this.$t('English') }}</span></el-dropdown-item
+              >
+              <el-dropdown-item @click="vn_version()"
+                ><img src="../../assets/flag/vi_VN.jpeg" alt="#" class="language_img me-2" /><span>{{ this.$t('Vietnamese') }}</span></el-dropdown-item
+              >
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
+        <!-- <el-radio-group class="language_style" v-model="radio" size="large" @change="changeLanguage($event)">
+          <el-menu-item index="4-1"><img src="../../assets/flag/zh_TW.jpeg" alt="#" class="language_img" /><el-radio label="TW">1</el-radio></el-menu-item>
+
+          <el-menu-item index="4-2"><img src="../../assets/flag/en_US.jpeg" alt="#" class="language_img" /><el-radio label="US">2</el-radio></el-menu-item>
+        </el-radio-group> -->
+        <el-dropdown  size="large" trigger="click">
           <span class="el-dropdown-link">
             <el-icon class="el-icon--right">
               <i class="fa-solid fa-bars fs-2"></i>
@@ -18,8 +47,10 @@
           </span>
           <template #dropdown>
             <el-dropdown-menu>
-              <el-dropdown-item @click="changePwd = true">修改密碼</el-dropdown-item>
-              <el-dropdown-item @click="logout">登出</el-dropdown-item>
+              <el-dropdown-item @click="changePwd = true"><i class="fa-solid fa-key me-2"></i>{{ this.$t('changePwd') }}</el-dropdown-item>
+              <el-dropdown-item @click="logout"
+                ><i class="fa-solid fa-arrow-right-from-bracket me-2"></i><span>{{ this.$t('logout') }}</span></el-dropdown-item
+              >
             </el-dropdown-menu>
           </template>
         </el-dropdown>
@@ -48,6 +79,7 @@ import _ from 'lodash';
 import { ElMessage } from 'element-plus';
 
 export default {
+  inject: ['reloadPage'],
   data() {
     return {
       // dark mode
@@ -66,6 +98,8 @@ export default {
       errorMsg: {
         googleVerifyCode: '',
       },
+      // 變更語言
+      radio: '選擇語言',
     };
   },
   methods: {
@@ -124,12 +158,67 @@ export default {
         }
       });
     },
+    goReset_pwd() {
+      this.$router.push('/transactionPwd');
+    },
+    // 中文版
+    tw_version() {
+      this.reloadPage();
+      this.$i18n.locale = 'tw';
+      this.radio = this.$t('Traditional_Chinese');
+    },
+    // 簡體中文
+    cn_version() {
+      this.reloadPage();
+      this.$i18n.locale = 'cn';
+      this.radio = this.$t('Simplified_Chinese');
+    },
+    // 英文版
+    en_version() {
+      this.reloadPage();
+      this.$i18n.locale = 'en';
+      this.radio = this.$t('English');
+    },
+    // 越南版
+    vn_version() {
+      this.reloadPage();
+      this.$i18n.locale = 'vn';
+      this.radio = this.$t('Vietnamese');
+    },
+
+    // 切換語種
+    // changeLanguage(value) {
+    //   console.log(value);
+    //   this.radio = value;
+    //   console.log(value, this.radio);
+    //   if (value === 'TW') {
+    //     this.tw_version();
+    //   } else if (value === 'US') {
+    //     this.en_version();
+    //   }
+    //   // else if (item === 'VN') {
+    //   //   this.vn_version();
+    //   // }
+    // },
+
     // 取消提交
     cancelBill() {
       this.changePwd = false;
     },
   },
   created() {
+    if (this.$i18n.locale === 'en') {
+      this.radio = 'English';
+    }
+    if (this.$i18n.locale === 'tw') {
+      this.radio = '繁體中文';
+    }
+    if (this.$i18n.locale === 'cn') {
+      this.radio = '简体中文';
+    }
+    if (this.$i18n.locale === 'vn') {
+      this.radio = 'Tiếng Việt';
+    }
     const currentTheme = localStorage.getItem('theme') ? localStorage.getItem('theme') : null;
     console.log(currentTheme);
     if (currentTheme) {
@@ -203,6 +292,10 @@ export default {
     border-top-left-radius: 50px;
     border-bottom-left-radius: 50px;
   }
+}
+.language_img {
+  width: 30px;
+  height: 20px;
 }
 </style>
 

@@ -62,7 +62,7 @@ export default defineComponent({
   components: {
     QrcodeVue,
   },
-  emits: ['getIfWidth'],
+  emits: ['changeWidth'],
   setup() {
     const handleOpen = (key, keyPath) => {
       console.log(key, keyPath);

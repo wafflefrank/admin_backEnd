@@ -1,5 +1,5 @@
 <template>
-  <router-view />
+  <router-view v-if="isRouterAlive"></router-view>
 </template>
 
 <script>
@@ -7,12 +7,14 @@ export default {
   provide() {
     return {
       getBankList: this.getBankList,
+      reloadPage: this.reloadPage,
     };
   },
   data() {
     return {
       //   銀行卡列表
       bankCard: [],
+      isRouterAlive: true,
     };
   },
   methods: {
@@ -21,6 +23,13 @@ export default {
       this.$http.get('/api/getMyBanks').then((res) => {
         console.log(res.data.data);
         this.bankCard = res.data.data;
+      });
+    },
+    // 畫面重新整理
+    reloadPage() {
+      this.isRouterAlive = false;
+      this.$nextTick(() => {
+        this.isRouterAlive = true;
       });
     },
   },
