@@ -6,35 +6,51 @@
     <nav class="head-nav">
       <ul class="menu">
         <li :class="active === 1 ? 'isActive' : ''" @click="clickScript(1)" @keydown="clickScript(1)">
-          <a href="#" @click.prevent="goMyaccount()"> <i class="fa-solid fa-house-user fs-2 ms-3"></i><span class="list_name">我的帳戶</span></a>
+          <a href="#" @click.prevent="goMyaccount()">
+            <i class="fa-solid fa-house-user fs-2 ms-3"></i><span class="list_name">{{ this.$t('myAccount') }}</span></a
+          >
         </li>
         <li :class="active === 2 ? 'isActive' : ''" @click="clickScript(2)" @keydown="clickScript(2)">
-          <a href="#" @click.prevent="goBasic()"> <i class="fa-solid fa-user fs-2 ms-3"></i><span class="list_name">基本訊息</span></a>
+          <a href="#" @click.prevent="goBasic()">
+            <i class="fa-solid fa-user fs-2 ms-3"></i><span class="list_name">{{ this.$t('bassicInfo') }}</span></a
+          >
         </li>
         <li :class="active === 3 ? 'isActive' : ''" @click="clickScript(3)" @keydown="clickScript(3)">
-          <a href="#" @click.prevent="goBank()"> <i class="fa-solid fa-money-check-dollar fs-2 ms-3"></i><span class="list_name">銀行卡訊息</span></a>
+          <a href="#" @click.prevent="goBank()">
+            <i class="fa-solid fa-money-check-dollar fs-2 ms-3"></i><span class="list_name">{{ this.$t('bankList') }}</span></a
+          >
         </li>
         <li :class="active === 4 ? 'isActive' : ''" @click="clickScript(4)" @keydown="clickScript(4)">
-          <a href="#" @click.prevent="goDailyReport()"> <i class="fa-solid fa-list-check fs-2 ms-3"></i><span class="list_name">對帳日報</span></a>
+          <a href="#" @click.prevent="goDailyReport()">
+            <i class="fa-solid fa-list-check fs-2 ms-3"></i><span class="list_name">{{ this.$t('dailyReport') }}</span></a
+          >
         </li>
         <li :class="active === 5 ? 'isActive' : ''" @click="clickScript(5)" @keydown="clickScript(5)">
-          <a href="#" @click.prevent="goOrderhistory()"> <i class="fa-solid fa-list-ol fs-2 ms-3"></i><span class="list_name">訂單紀錄</span></a>
+          <a href="#" @click.prevent="goOrderhistory()">
+            <i class="fa-solid fa-list-ol fs-2 ms-3"></i><span class="list_name">{{ this.$t('orderHistory') }}</span></a
+          >
         </li>
         <li :class="active === 6 ? 'isActive' : ''" @click="clickScript(6)" @keydown="clickScript(6)">
-          <a href="#" @click.prevent="goOrderFlow()"> <i class="fa-solid fa-list-ul fs-2 ms-3"></i><span class="list_name">訂單流水</span></a>
+          <a href="#" @click.prevent="goOrderFlow()">
+            <i class="fa-solid fa-list-ul fs-2 ms-3"></i><span class="list_name">{{ this.$t('orderFlow') }}</span></a
+          >
         </li>
         <li :class="active === 7 ? 'isActive' : ''" @click="clickScript(7)" @keydown="clickScript(7)">
-          <a href="#" @click.prevent="goBillHistory()"> <i class="fa-solid fa-sack-dollar fs-2 ms-3"></i><span class="list_name">結算紀錄</span></a>
+          <a href="#" @click.prevent="goBillHistory()">
+            <i class="fa-solid fa-sack-dollar fs-2 ms-3"></i><span class="list_name">{{ this.$t('billHistory') }}</span></a
+          >
         </li>
         <li :class="active === 8 ? 'isActive' : ''" @click="clickScript(8)" @keydown="clickScript(8)">
-          <a href="#" @click.prevent="openGoogle_QR()"> <i class="fa-solid fa-unlock fs-2 ms-3"></i><span class="list_name">Google 驗證器</span></a>
+          <a href="#" @click.prevent="openGoogle_QR()">
+            <i class="fa-solid fa-unlock fs-2 ms-3"></i><span class="list_name">{{ this.$t('googleAuthenticator') }}</span></a
+          >
         </li>
       </ul>
     </nav>
     <span v-if="isExpand === true" class="expand_btn" @click="clickExpand()" @keydown="clickExpand()"><i class="fa-solid fa-angles-left"></i></span>
     <span v-if="isExpand === false" class="expand_btn" @click="clickExpand()" @keydown="clickExpand()"><i class="fa-solid fa-angles-right"></i></span>
   </header>
-  <el-dialog class="QRModel_style" v-model="QRDialogVisible" title="Google驗證器" width="50%" center>
+  <el-dialog class="QRModel_style" v-model="QRDialogVisible" :title="this.$t('googleAuthenticator')" width="50%" center>
     <div class="d-flex justify-content-center align-items-center mb-3">
       <span class="text-white">驗證登入</span>
       <el-switch class="google_switch" v-model="isGoogleOn.isLoginGoogleVerify" style="--el-switch-on-color: #faa30d; --el-switch-off-color: #2c2c2c" @change="toggleMode(isGoogleOn.isLoginGoogleVerify)" />
@@ -274,7 +290,7 @@ $pad: 0.925rem;
       text-indent: -20em;
       white-space: nowrap;
       text-align: left;
-      margin-left: 70px;
+      margin-left: 50px;
       transition: text-indent 400ms ease-in-out;
     }
   }

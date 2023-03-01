@@ -8,11 +8,11 @@
               <div class="text-center icon-shape bg-gradient-primary d-flex align-items-center justify-content-center flex-column">
                 <i class="fa-solid fa-yen-sign fs-3 text-white"></i>
               </div>
-              <el-button color="#faa30d" class="mt-2 text-white bill_btn fw-bold fs-6" size="small" @click="billVisible = true">結算<i class="fa-solid fa-sack-xmark ms-1"></i></el-button>
+              <el-button color="#faa30d" class="mt-2 text-white bill_btn fw-bold fs-6" size="small" @click="billVisible = true">{{ this.$t('settle') }}<i class="fa-solid fa-sack-xmark ms-1"></i></el-button>
             </div>
             <div class="">
               <div class="numbers">
-                <p class="mb-3 text-sm text-uppercase font-weight-bold fs-4">可結算</p>
+                <p class="mb-3 text-sm font-weight-bold fs-5">{{ this.$t('total') }}</p>
                 <h4 class="font-weight-bolder">${{ this.OrderTotal.billAmount_able }}</h4>
 
                 <!-- <span class="text-sm text-success">+55%</span> since yesterday -->
@@ -33,7 +33,7 @@
             </div>
             <div>
               <div class="numbers">
-                <p class="mb-3 text-sm text-uppercase font-weight-bold fs-4">今日待出款</p>
+                <p class="mb-3 text-sm  font-weight-bold fs-5">{{ this.$t('awaitingPayment') }}</p>
                 <h4 class="font-weight-bolder">${{ this.lockedAmount }}</h4>
                 <!-- <span class="text-sm text-success fw-bold">+3%</span> since last week -->
               </div>
@@ -53,7 +53,7 @@
             </div>
             <div class="">
               <div class="numbers">
-                <p class="mb-3 text-sm text-uppercase font-weight-bold fs-4">本月交易額</p>
+                <p class="mb-3 text-sm  font-weight-bold fs-5">{{ this.$t('transactionMonth') }}</p>
                 <h4 class="font-weight-bolder">${{ this.OrderTotal.monthTotal }}</h4>
                 <!-- <span class="text-sm text-danger">-2%</span> since last quarter -->
               </div>
@@ -73,7 +73,7 @@
             </div>
             <div class="">
               <div class="numbers">
-                <p class="mb-3 text-sm text-uppercase font-weight-bold fs-4">本月筆數</p>
+                <p class="mb-3 text-sm  font-weight-bold fs-5">{{ this.$t('amountThisMonth') }}</p>
                 <h4 class="font-weight-bolder">{{ this.ThisMonthNums }}</h4>
                 <!-- <span class="text-sm text-success">+5%</span> than last month -->
               </div>
@@ -87,7 +87,7 @@
     <div class="col-12 col-lg-12 col-xl-12">
       <div class="card_barStyle radius-10 p-3">
         <div class="d-flex align-items-center justify-content-between">
-          <h2 class="text-white d-flex flex-start my-4">訂單營業額統計圖</h2>
+          <h2 class="text-white d-flex flex-start my-4">{{ this.$t('statisticsChart') }}</h2>
           <div class="block date_Style me-5">
             <!-- <span class="demonstration text-white">Month</span> -->
             <el-date-picker v-model="timeValue" type="month" placeholder="Pick a month" @change="getMonth()" />
@@ -95,16 +95,16 @@
         </div>
         <div class="hstack flex-wrap align-items-center justify-content-evenly gap-3 gap-sm-4 mb-4 border p-3 radius-10">
           <div class="d-flex align-items-center">
-            <p class="mb-0 fs-4 text-light me-5">今日交易額</p>
+            <p class="mb-0 fs-5 text-light me-5">{{ this.$t('todayTransaction') }}</p>
             <h5 class="mb-0">
-              <span class="text-white font-13">{{ this.todayOrder_amount }}<span class="fs-6">元</span></span>
+              <span class="text-white font-13">{{ this.todayOrder_amount }}<span class="fs-6">{{ this.$t('unit') }}</span></span>
             </h5>
           </div>
           <div class="vr"></div>
           <div class="d-flex align-items-center">
-            <p class="mb-0 fs-4 text-light me-5">今日訂單量</p>
+            <p class="mb-0 fs-5 text-light me-5">{{ this.$t('todayOrders') }}</p>
             <h5 class="mb-0">
-              <span class="text-white font-13">{{ this.todayOrder_count }}<span class="fs-6">元</span></span>
+              <span class="text-white font-13">{{ this.todayOrder_count }}<span class="fs-6">{{ this.$t('unit') }}</span></span>
             </h5>
           </div>
         </div>
@@ -120,54 +120,54 @@
     </div> -->
   </div>
   <!-- 結算彈窗 -->
-  <el-dialog class="billModel_style" v-model="billVisible" title="確定結算" width="50%" center>
+  <el-dialog class="billModel_style" v-model="billVisible" :title="this.$t('settlement_confirm')" width="50%" center>
     <!-- <el-input class="bankName_style" v-model="google_code" placeholder="銀行名稱"> </el-input> -->
     <div class="d-flex align-items-center chooseBill_style">
-      <span>結算帳戶</span>
-      <el-select class="chooseBank_style" v-model="billAdd_Form.bankOwner" placeholder="選擇帳戶" @change="chooseBank_name(billAdd_Form.bankOwner)" clearable>
+      <span>{{ this.$t('settlement_account') }}</span>
+      <el-select class="chooseBank_style" v-model="billAdd_Form.bankOwner" :placeholder="this.$t('choose_account')" @change="chooseBank_name(billAdd_Form.bankOwner)" clearable>
         <el-option v-for="item in bankCard" :value="item.id" :key="item.bankOwner" :label="item.bankOwner"></el-option>
       </el-select>
     </div>
     <div class="d-flex align-items-center chooseBill_style">
-      <span>所屬銀行</span>
-      <el-select disabled class="chooseBank_style" v-model="billAdd_Form.bankName" placeholder="所屬銀行" clearable>
+      <span>{{ this.$t('bank') }}</span>
+      <el-select disabled class="chooseBank_style" v-model="billAdd_Form.bankName" :placeholder="this.$t('bank')" clearable>
         <el-option v-for="item in bankCard" :value="item.id" :key="item" :label="item.bankName"></el-option>
       </el-select>
     </div>
-    <el-input class="addInfo_style mt-3" v-model="billAdd_Form.amount" placeholder="結算金額" oninput="value=value.replace(/[^0-9.]/g,'')"> <template #prepend>結算金額</template> </el-input>
+    <el-input class="addInfo_style mt-3" v-model="billAdd_Form.amount" :placeholder="this.$t('settlement_amount')" oninput="value=value.replace(/[^0-9.]/g,'')"> <template #prepend>{{ this.$t('settlement_amount') }}</template> </el-input>
     <div class="d-flex align-items-center">
-      <el-input class="addInfo_style mt-3" v-model="billAdd_Form.paidPassword" placeholder="支付密碼" type="password"> <template #prepend>支付密碼</template> </el-input>
-      <div @click="resetPwd()" @keydown="resetPwd()" class="resetPwd_style mt-3"><span class="text-white">重置支付密碼</span></div>
+      <el-input class="addInfo_style mt-3" v-model="billAdd_Form.paidPassword" :placeholder="this.$t('Transaction_pwd')" type="password"> <template #prepend>{{ this.$t('Transaction_pwd') }}</template> </el-input>
+      <div @click="resetPwd()" @keydown="resetPwd()" class="resetPwd_style mt-3"><span class="text-white">{{ this.$t('Transaction_resetPwd') }}</span></div>
     </div>
     <div class="d-flex flex-column align ms-4">
       <div class="d-flex mt-5">
-        <span class="fs-6 text-white">備註</span>
+        <span class="fs-6 text-white">{{ this.$t('Remark') }}</span>
       </div>
       <div>
         <span class="text-light"
-          >手續費: <span class="text-deep2-danger ms-1 fw-bold">{{ this.xfFee }}元</span></span
+          >{{ this.$t('Fee') }}: <span class="text-deep2-danger ms-1 fw-bold">{{ this.xfFee }}{{ this.$t('unit') }}</span></span
         >
       </div>
     </div>
 
     <div class="d-flex justify-content-center">
-      <el-button color="#faa30d" plain class="cancel_btn p-4 mt-4 fw-bold fs-5 align-self-center" size="default" @click="cancelBill()">取消</el-button>
-      <el-button color="#faa30d" class="confirm_btn p-4 mt-4 fw-bold fs-5 align-self-center" size="default" @click="conFirmBill()">確定</el-button>
+      <el-button color="#faa30d" plain class="cancel_btn p-4 mt-4 fw-bold fs-5 align-self-center" size="default" @click="cancelBill()">{{ this.$t('Cancel') }}</el-button>
+      <el-button color="#faa30d" class="confirm_btn p-4 mt-4 fw-bold fs-5 align-self-center" size="default" @click="conFirmBill()">{{ this.$t('confirm') }}</el-button>
     </div>
   </el-dialog>
   <!-- 重置密碼彈窗 -->
-  <el-dialog class="billModel_style" v-model="resetPwdVisible" title="設置支付密碼" width="50%" center>
-    <el-input class="addInfo_style mt-3" v-model="resetPwd_Form.paidPassword" placeholder="支付密碼" type="password"> <template #prepend>支付密碼</template> </el-input>
+  <el-dialog class="billModel_style" v-model="resetPwdVisible" :title=" this.$t('Setting_pwd')" width="50%" center>
+    <el-input class="addInfo_style mt-3" v-model="resetPwd_Form.paidPassword" :placeholder="this.$t('Transaction_pwd')" type="password"> <template #prepend>{{ this.$t('Transaction_pwd') }}</template> </el-input>
 
-    <el-input class="addInfo_style mt-3" v-model="paidPassword_sec" placeholder="確認密碼" type="password"> <template #prepend>確認密碼</template> </el-input>
+    <el-input class="addInfo_style mt-3" v-model="paidPassword_sec" :placeholder="this.$t('confirm_pwd')" type="password"> <template #prepend>{{ this.$t('confirm_pwd') }}</template> </el-input>
     <div class="d-flex" style="margin-left: 200px">
       <span class="fs-6 text-deep-danger fw-bold me-2">※</span>
-      <span class="fs-6 text-white">支付密碼必須包含大小寫字母及數字，最小5位，最大15位。</span>
+      <span class="fs-6 text-white">{{ this.$t('rule_pwd') }}</span>
     </div>
-    <el-input class="addInfo_style mt-3" v-model="resetPwd_Form.googleVerifyCode" placeholder="Google驗證碼"> <template #prepend>Google驗證碼</template> </el-input>
+    <el-input class="addInfo_style mt-3" v-model="resetPwd_Form.googleVerifyCode" :placeholder="this.$t('googleCode')"> <template #prepend>{{ this.$t('googleCode') }}</template> </el-input>
 
     <div class="d-flex justify-content-center">
-      <el-button color="#faa30d" class="save_btn p-4 mt-4 fw-bold fs-5 align-self-center" size="default" @click="savePwd()">保存</el-button>
+      <el-button color="#faa30d" class="save_btn p-4 mt-4 fw-bold fs-5 align-self-center" size="default" @click="savePwd()">{{ this.$t('Save') }}</el-button>
     </div>
   </el-dialog>
 </template>
@@ -413,8 +413,12 @@ export default {
       console.log(this.dateRange.startAt);
       console.log(this.dateRange.endAt);
       this.$http.post('/api/getMyOrderDailyReport', this.dateRange).then((res) => {
-        this.ThisMonthNums = res.data.data[0].orderCount;
-        console.log(this.ThisMonthNums);
+        if (res.data.data.length === 0) {
+          this.ThisMonthNums = 0;
+        } else {
+          this.ThisMonthNums = res.data.data[0].orderCount;
+          console.log(this.ThisMonthNums);
+        }
       });
     },
     // 獲取今日交易額 & 訂單量

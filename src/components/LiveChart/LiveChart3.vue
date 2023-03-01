@@ -17,6 +17,7 @@ const nowTime = moment(new Date()).format('YYYY-MM-01'); // 當前日期轉換�
 const dateCount = [];
 const totalCount = []; // 營業額
 const orderCount = []; // 訂單量
+// const receivedAmount = this.$t('order_receivedAmount');
 export default {
   name: 'App',
   components: {
