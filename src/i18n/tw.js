@@ -52,5 +52,42 @@ export default {
   rule_pwd: '支付密碼必須包含大小寫字母及數字，最小5位，最大15位。',
   googleCode: 'Google驗證碼',
   Save: '保存',
-  // chart圖
+
+  // 基本訊息
+  basicMsg: '基本訊息',
+  merchantID: '商戶ID',
+  key: '密鑰',
+  checkKey: '查看密鑰',
+  name: '姓名',
+  account: '帳號',
+  bankCard: '銀行卡',
+  cards: '張',
+  check: '查看',
+  loginHistory: '登入紀錄',
+  loginLocation: '登入地點',
+  registTime: '註冊時間',
+  tunnelMsg: '通道訊息',
+  tunnelName: '通道名稱',
+  ratePercent: '費率(%)',
+  rate: '費率',
+  billType: '結算方式',
+  bill: '代付',
+  status: '狀態',
+
+  // 銀行卡訊息
+  bankCardInfo: '銀行卡訊息',
+  showNum: '顯示卡號',
+  add: '新增',
+  delete: '刪除',
+  addBankCard: '新增銀行卡',
+  bankAccount: '銀行卡號',
+  choose_bank: '選擇銀行',
+  bankOwner: '持卡人',
+  addSuccess: '新增成功',
+  googleCodeMsg: 'Google驗證碼有誤',
+  delete_sure: '確定要刪除此銀行卡 ?',
+  choose_oneCard: '請至少選擇一張銀行卡',
+  deleteSuccess: '刪除成功',
+
+  // 對帳日報
 };

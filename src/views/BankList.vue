@@ -5,28 +5,28 @@
       <div class="card_outStyle radius-10 p-3 pb-4">
         <!-- 標題 -->
         <div class="d-flex align-items-center justify-content-between mx-4">
-          <h4 class="text-white d-flex flex-start my-4">銀行卡訊息</h4>
+          <h4 class="text-white d-flex flex-start my-4">{{ this.$t('bankCardInfo') }}</h4>
         </div>
         <div class="d-flex justify-content-between">
           <!-- 交易類型 -->
           <div class="d-flex align-items-center mx-4">
-            <el-checkbox class="checkCard_style" v-model="checked2" @change="test(checked2)">顯示卡號</el-checkbox>
+            <el-checkbox class="checkCard_style" v-model="checked2" @change="test(checked2)">{{ this.$t('showNum') }}</el-checkbox>
           </div>
           <!-- 新增 & 刪除 -->
           <div class="d-flex flex-column">
-            <el-button color="#faa30d" class="search_btn px-4 fw-bold me-3" size="default" @click="openADD_modal()">新增</el-button>
-            <el-popconfirm title="確定要刪除此銀行卡 ?" @confirm="confirmEvent()">
-              <template #reference><el-button color="rgba(209, 49, 40, 1)" class="mt-3 px-4 fw-bold me-3" size="default" @click="deleteBank()">刪除</el-button></template>
+            <el-button color="#faa30d" class="search_btn px-4 fw-bold me-3" size="default" @click="openADD_modal()">{{ this.$t('add') }}</el-button>
+            <el-popconfirm :title="this.$t('delete_sure')" @confirm="confirmEvent()">
+              <template #reference><el-button color="rgba(209, 49, 40, 1)" class="mt-3 px-4 fw-bold me-3" size="default" @click="deleteBank()">{{ this.$t('delete') }}</el-button></template>
             </el-popconfirm>
           </div>
           <!-- 新增彈窗 -->
-          <el-dialog class="addModel_style" v-model="addBankVisible" title="新增銀行卡" width="70%" center>
+          <el-dialog class="addModel_style" v-model="addBankVisible" :title="this.$t('addBankCard')" width="70%" center>
             <!-- <el-input class="bankName_style" v-model="google_code" placeholder="銀行名稱"> </el-input> -->
 
-            <el-input class="bankName_style mt-3" v-model="addForm.bankAccount" placeholder="銀行卡號">
-              <template #prepend>銀行卡號</template>
+            <el-input class="bankName_style mt-3" v-model="addForm.bankAccount" :placeholder="this.$t('bankAccount')">
+              <template #prepend>{{ this.$t('bankAccount') }}</template>
               <template #append>
-                <el-select class="chooseBank_style" v-model="addForm.bankName" placeholder="選擇銀行" @change="chooseBank_name(addForm.bankName)" clearable>
+                <el-select class="chooseBank_style" v-model="addForm.bankName" :placeholder="this.$t('choose_bank')" @change="chooseBank_name(addForm.bankName)" clearable>
                   <el-option label="AGRIBANK" value="AGRIBANK"></el-option>
                   <el-option label="BIDV" value="BIDV"></el-option>
                   <el-option label="VIETINBANK" value="VIETINBANK"></el-option>
@@ -70,11 +70,11 @@
                 </el-select>
               </template>
             </el-input>
-            <el-input class="addInfo_style mt-3" v-model="addForm.bankOwner" placeholder="持卡人"> <template #prepend>持卡人</template> </el-input>
-            <el-input class="addInfo_style mt-3" v-model="addForm.googleVerifyCode" placeholder="Goole驗證碼"> <template #prepend>Goole驗證碼</template> </el-input>
+            <el-input class="addInfo_style mt-3" v-model="addForm.bankOwner" :placeholder="this.$t('bankOwner')"> <template #prepend>{{ this.$t('bankOwner') }}</template> </el-input>
+            <el-input class="addInfo_style mt-3" v-model="addForm.googleVerifyCode" :placeholder="this.$t('googleCode')"> <template #prepend>{{ this.$t('googleCode') }}</template> </el-input>
 
             <div class="d-flex justify-content-center">
-              <el-button color="#faa30d" class="save_btn p-4 mt-4 fw-bold fs-5 align-self-center" size="default" @click="saveBank()">保存</el-button>
+              <el-button color="#faa30d" class="save_btn p-4 mt-4 fw-bold fs-5 align-self-center" size="default" @click="saveBank()">{{ this.$t('Save') }}</el-button>
             </div>
           </el-dialog>
         </div>
@@ -269,7 +269,7 @@ export default {
         if (res.data.code === 200) {
           this.addBankVisible = false;
           this.reload_bankList();
-          this.$swal.fire('新增成功!', '新增成功', 'success');
+          this.$swal.fire(`${this.$t('addSuccess')}!`, `${this.$t('addSuccess')}`, 'success');
         } else if (res.data.code === 422) {
           this.errorMsg.bankAccount = _.findKey(addMsg, ['param', 'bankAccount']);
           console.log(this.errorMsg.bankAccount);
@@ -292,7 +292,7 @@ export default {
             ElMessage({ showClose: true, message: `${res.data.msg.googleVerifyCode.msg}`, type: 'error' });
           }
         } else {
-          ElMessage({ showClose: true, message: 'Google驗證碼有誤', type: 'error' });
+          ElMessage({ showClose: true, message: `${this.$t('googleCodeMsg')}`, type: 'error' });
         }
       });
     },
@@ -301,12 +301,12 @@ export default {
     // 確認刪除
     confirmEvent() {
       if (this.active === '') {
-        ElMessage({ showClose: true, message: '請至少選擇一張銀行卡', type: 'warning' });
+        ElMessage({ showClose: true, message: `${this.$t('choose_oneCard')}`, type: 'warning' });
       } else if (this.active !== '') {
         this.deleteBank_choose.id = this.active;
         this.$http.post('/api/deleteMyBank', this.deleteBank_choose).then((res) => {
           console.log(res.data.code);
-          this.$swal.fire('刪除成功!', `${res.data.msg}`, 'success');
+          this.$swal.fire(`${this.$t('deleteSuccess')}!`, `${res.data.msg}`, 'success');
           this.reload_bankList();
           this.active = '';
           return this.active;
@@ -333,7 +333,9 @@ export default {
 // 卡片最外框底樣式
 .card_outStyle {
   background-color: rgb(0 0 0 / 20%);
-  box-shadow: 0 0.3rem 0.8rem rgb(0 0 0 / 12%);
+  box-shadow: 0px 0px 10px 2px rgba(242, 242, 242, 0.61);
+  -webkit-box-shadow: 0px 0px 19px 2px rgba(242, 242, 242, 0.61);
+  -moz-box-shadow: 0px 0px 19px 2px rgba(242, 242, 242, 0.61);
   margin-bottom: 1.5rem;
   border: 0 solid transparent;
   border-radius: 15px;

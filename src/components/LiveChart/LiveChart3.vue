@@ -5,9 +5,11 @@
 </template>
 
 <script>
+// 引入 I18n 套件
 import Vue3ChartJs from '@j-t-mcc/vue3-chartjs';
 import _ from 'lodash';
 import moment from 'moment';
+// import i18n from '../../i18n/index';
 
 const date = new Date(); // 當前時間國字格式
 const year = date.getFullYear(); // 當年
@@ -65,6 +67,7 @@ export default {
     };
   },
   setup() {
+    // const test =this.$t('order_receivedAmount')
     const lineChart = {
       type: 'line',
       options: {
@@ -229,6 +232,7 @@ export default {
     };
     return {
       lineChart,
+      // i18n,
     };
   },
   methods: {
@@ -320,11 +324,75 @@ export default {
     handleUpdateClick() {
       this.key += 1;
     },
+    changeLang() {
+      if (this.$i18n.locale === 'cn') {
+        this.lineChart.data.datasets[0].label = '代收总量';
+        this.lineChart.data.datasets[1].label = '订单量';
+        this.lineChart.options.scales.y.title.text = '代收总量';
+        this.lineChart.options.scales.y1.title.text = '订单量';
+        this.lineChart.options.scales.y.ticks = {
+          stepSize: 50000,
+          callback(val) {
+            // console.log(val, index);
+            return `${this.getLabelForValue(val)} 元`;
+          },
+        };
+        this.lineChart.options.scales.y1.ticks = {
+          stepSize: 1,
+          callback(val) {
+            // console.log(val, index);
+            return `${this.getLabelForValue(val)} 单`;
+          },
+        };
+      }
+      if (this.$i18n.locale === 'en') {
+        this.lineChart.data.datasets[0].label = 'Amount of order received';
+        this.lineChart.data.datasets[1].label = 'Order quantity';
+        this.lineChart.options.scales.y.title.text = 'Amount of order received';
+        this.lineChart.options.scales.y1.title.text = 'Order quantity';
+        this.lineChart.options.scales.y.ticks = {
+          stepSize: 50000,
+          callback(val) {
+            // console.log(val, index);
+            return `${this.getLabelForValue(val)} $`;
+          },
+        };
+        this.lineChart.options.scales.y1.ticks = {
+          stepSize: 1,
+          callback(val) {
+            // console.log(val, index);
+            return `${this.getLabelForValue(val)} rows`;
+          },
+        };
+      }
+      if (this.$i18n.locale === 'vn') {
+        this.lineChart.data.datasets[0].label = 'Tổng bộ sưu tập';
+        this.lineChart.data.datasets[1].label = 'số lượng đặt hàng';
+        this.lineChart.options.scales.y.title.text = 'Tổng bộ sưu tập';
+        this.lineChart.options.scales.y1.title.text = 'số lượng đặt hàng';
+        this.lineChart.options.scales.y.ticks = {
+          stepSize: 50000,
+          callback(val) {
+            // console.log(val, index);
+            return `${this.getLabelForValue(val)} $`;
+          },
+        };
+        this.lineChart.options.scales.y1.ticks = {
+          stepSize: 1,
+          callback(val) {
+            // console.log(val, index);
+            return `${this.getLabelForValue(val)} rows`;
+          },
+        };
+      }
+    },
   },
   created() {
     console.log(year, month, date.getDate(), nowTime);
     this.getChart();
     this.getChart_data();
+    this.changeLang();
+    console.log();
   },
 };
 </script>

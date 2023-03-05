@@ -50,6 +50,7 @@ app.config.globalProperties._ = _;
 app.config.globalProperties.$echarts = echarts;
 app.config.globalProperties.FontAwesomeIcon = FontAwesomeIcon;
 app.config.globalProperties.i18n = i18n;
+app.config.globalProperties.$t = i18n.global.t;
 app.config.globalProperties.$isLoading = false; // 預設轉圈讀條關閉
 // 全局methods
 app.config.globalProperties.$filters = {

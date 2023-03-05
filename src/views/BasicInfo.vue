@@ -1,124 +1,129 @@
 <template>
   <div class="row">
-    <!-- 基本訊息 -->
-    <div class="col-12 col-lg-3 col-xl-3">
-      <div class="card_outStyle radius-10 p-3">
-        <!-- 標題 -->
-        <div class="d-flex align-items-center justify-content-between mx-4">
-          <h4 class="text-white d-flex flex-start my-4">基本信息</h4>
-        </div>
-        <!-- 商戶卡訊息 -->
-        <div class="mb-4 card merchant_style mx-4">
-          <div class="px-3 card-body">
-            <div class="d-flex flex-row-reverse justify-content-between">
-              <div>
-                <div class="text-center merchant-icon bg-gradient-primary d-flex align-items-center justify-content-center">
-                  <img src="../assets/avatar.png" class="merchant-icon" alt="#" />
-                </div>
-              </div>
-              <div>
-                <div class="text-start">
-                  <p class="mb-0 fs-6 text-sm font-weight-bold fw-bold">商戶ID : {{ this.memberID }}</p>
-                  <div class="d-flex align-items-center">
-                    <p class="mb-0 fs-6 text-sm font-weight-bold fw-bold">密鑰 :</p>
-                    <span class="ms-2 fw-bold">******</span>
-                  </div>
-                  <el-button class="check_key_btn mt-1 px-2 fw-bold" color="#faa30d" size="default" @click="centerDialogVisible = true">查看密鑰</el-button>
-
-                  <!-- 密鑰彈窗 -->
-                  <el-dialog class="key_style" v-model="centerDialogVisible" title="密鑰" width="30%" center>
-                    <div class="d-flex justify-content-center align-items-center">
-                      <span id="copyText"> {{ this.memberSign }} </span>
-                      <i class="fa-regular fa-copy text-yellow ms-2 fs-4" @click="copyText()" @keydown="copyText()"></i>
-                    </div>
-                  </el-dialog>
-                  <!-- 登入紀錄彈窗 -->
-                  <el-dialog class="loginHistory_style" v-model="loginDialogVisible" title="登入紀錄" width="40%" center>
-                    <div class="loginHyTable_style">
-                      <el-table :data="loginHistory_Data" :header-cell-style="{ background: 'linear-gradient(180deg, rgba(252, 240, 255, 1) 0%, rgba(115, 111, 159, 0.46) 100%)', color: '#606266' }">
-                        <el-table-column prop="createdAt" label="登入時間" width="180" align="center">
-                          <!-- <template v-slot="{ row }">{{ formatdfRate(row.dfRate) }}</template> -->
-                        </el-table-column>
-                        <el-table-column prop="ipLocation" label="登入地點" align="center">
-                          <!-- <template v-slot="{ row }">{{ formatdfStatus(row.isDfActive) }}</template> -->
-                        </el-table-column>
-                        <el-table-column prop="ip" label="IP" align="center">
-                          <!-- <template v-slot="{ row }">{{ formatdfStatus(row.isDfActive) }}</template> -->
-                        </el-table-column>
-                      </el-table>
-                    </div>
-                  </el-dialog>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="card_lightStyle mx-4 d-flex justify-content-between px-3">
-          <p class="fw-bold">姓名:</p>
-          <span class="fw-bold">{{ this.memberName }}</span>
-        </div>
-        <div class="card_lightStyle mx-4 d-flex justify-content-between px-3">
-          <p class="fw-bold">帳號:</p>
-          <span class="fw-bold">{{ this.memberPhone }}</span>
-        </div>
-        <div class="card_lightStyle mx-4 d-flex justify-content-between px-3 align-items-center">
-          <p class="fw-bold">銀行卡 {{ this.bankNums }} 張</p>
-          <el-button class="invite_friend_btn fw-bold" color="#faa30d" size="default" @click="checkBank()">查看</el-button>
-        </div>
-        <div class="d-flex justify-content-center">
-          <el-button class="invite_friend_btn mt-1 px-4 py-4 fw-bold mb-4" color="#faa30d" size="default" @click="loginDialogVisible = true">登入紀錄</el-button>
-        </div>
-
-        <span class="text-deep2">註冊時間 : {{ this.registTime }} </span>
-      </div>
-    </div>
     <!-- 通道訊息 -->
     <div class="col-12 col-lg-9 col-xl-9">
       <div class="card_outStyle radius-10 p-3">
         <!-- 標題 -->
         <div class="mx-4">
-          <h4 class="text-white d-flex flex-start my-4">通道訊息</h4>
+          <h4 class="text-white d-flex flex-start my-4">{{ this.$t('tunnelMsg') }}</h4>
           <!-- 內容 -->
           <div class="user_skills">
             <el-table :data="tableData" :header-cell-style="{ background: 'linear-gradient(180deg, rgba(252, 240, 255, 1) 0%, rgba(89, 160, 182, 0.597) 100%)', color: '#606266' }">
-              <el-table-column prop="payGateCode" label="通道名稱" align="center" width="180">
-                <template v-slot="{ row }">{{ formatName(row.payGateCode) }}</template>
+              <el-table-column prop="payGateCode" :label="this.$t('tunnelName')" align="center" width="180">
+                <template v-slot="{ row }">{{ formatName(row.payGateCode) }} </template>
               </el-table-column>
-              <el-table-column prop="rate" label="費率(%)" width="180" align="center">
+              <el-table-column prop="rate" :label="this.$t('ratePercent')" width="180" align="center">
                 <template v-slot="{ row }">{{ formatRate(row.rate) }}</template>
               </el-table-column>
-              <el-table-column prop="isActive" label="費率" width="180" align="center">
+              <el-table-column prop="isActive" :label="this.$t('rate')" width="180" align="center">
                 <template v-slot="{ row }">
                   <el-tag :type="row.isActive === 1 ? 'success' : 'danger'">
                     {{ formatgmtUsed(row.isActive) }}
                   </el-tag>
                 </template>
               </el-table-column>
-              <el-table-column prop="billType" label="結算方式" align="center" />
+              <el-table-column prop="billType" :label="this.$t('billType')" align="center" />
             </el-table>
           </div>
         </div>
       </div>
     </div>
+    <!-- 基本訊息 -->
+    <div class="col-12 col-lg-3 col-xl-3">
+      <div class="card_outStyle radius-10 p-3">
+        <!-- 標題 -->
+        <div class="d-flex align-items-center justify-content-between mx-4">
+          <h4 class="text-white d-flex flex-start my-4">{{ this.$t('basicMsg') }}</h4>
+        </div>
+        <!-- 商戶卡訊息 -->
+        <div class="card_lightStyle mx-4">
+          <div class="mb-4 mx-4">
+            <div class="px-3 card-body">
+              <div class="text-center bg-gradient-primary d-flex align-items-center justify-content-center mb-3">
+                <!-- <i class="fa-solid fa-user"></i> -->
+                <img src="../assets/view3.jpg" class="merchant-icon" alt="#" />
+              </div>
+              <div class="d-flex flex-row-reverse justify-content-center">
+                <div>
+                  <div class="text-start">
+                    <p class="mb-0 fs-6 text-sm font-weight-bold fw-bold">{{ this.$t('merchantID') }} : {{ this.memberID }}</p>
+                    <div class="d-flex align-items-center">
+                      <p class="mb-0 fs-6 text-sm font-weight-bold fw-bold">{{ this.$t('key') }} :</p>
+                      <span class="ms-2 fw-bold">******</span>
+                    </div>
+                    <el-button class="check_key_btn mt-1 px-2 fw-bold" color="#faa30d" size="default" @click="centerDialogVisible = true">{{ this.$t('checkKey') }}</el-button>
+
+                    <!-- 密鑰彈窗 -->
+                    <el-dialog class="key_style" v-model="centerDialogVisible" :title="this.$t('key')" width="30%" center>
+                      <div class="d-flex justify-content-center align-items-center">
+                        <span id="copyText"> {{ this.memberSign }} </span>
+                        <i class="fa-regular fa-copy text-yellow ms-2 fs-4" @click="copyText()" @keydown="copyText()"></i>
+                      </div>
+                    </el-dialog>
+                    <!-- 登入紀錄彈窗 -->
+                    <el-dialog class="loginHistory_style" v-model="loginDialogVisible" :title="this.$t('loginHistory')" width="40%" center>
+                      <div class="loginHyTable_style">
+                        <el-table :data="loginHistory_Data" :header-cell-style="{ background: 'linear-gradient(180deg, rgba(252, 240, 255, 1) 0%, rgba(115, 111, 159, 0.46) 100%)', color: '#606266' }">
+                          <el-table-column prop="createdAt" :label="this.$t('loginHistory')" width="180" align="center">
+                            <!-- <template v-slot="{ row }">{{ formatdfRate(row.dfRate) }}</template> -->
+                          </el-table-column>
+                          <el-table-column prop="ipLocation" :label="this.$t('loginLocation')" align="center">
+                            <!-- <template v-slot="{ row }">{{ formatdfStatus(row.isDfActive) }}</template> -->
+                          </el-table-column>
+                          <el-table-column prop="ip" label="IP" align="center">
+                            <!-- <template v-slot="{ row }">{{ formatdfStatus(row.isDfActive) }}</template> -->
+                          </el-table-column>
+                        </el-table>
+                      </div>
+                    </el-dialog>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="mx-4 d-flex justify-content-between px-3 pb-2">
+            <p class="fw-bold">{{ this.$t('name') }}:</p>
+            <span class="fw-bold">{{ this.memberName }}</span>
+          </div>
+          <div class="mx-4 d-flex justify-content-between px-3 pb-2">
+            <p class="fw-bold">{{ this.$t('account') }}:</p>
+            <span class="fw-bold">{{ this.memberPhone }}</span>
+          </div>
+          <div class="mx-4 d-flex justify-content-between px-3 pb-2 align-items-center">
+            <p class="fw-bold">{{ this.$t('bankCard') }} {{ this.bankNums }} {{ this.$t('cards') }}</p>
+            <el-button class="invite_friend_btn fw-bold" color="#faa30d" size="default" @click="checkBank()">{{ this.$t('check') }}</el-button>
+          </div>
+          <div class="d-flex justify-content-center">
+            <el-button class="invite_friend_btn mt-1 px-4 py-4 fw-bold mb-4" color="#faa30d" size="default" @click="loginDialogVisible = true">{{ this.$t('loginHistory') }}</el-button>
+          </div>
+        </div>
+
+        <span class="text-deep2">{{ this.$t('registTime') }} : {{ this.registTime }} </span>
+      </div>
+    </div>
   </div>
   <!-- 代付 -->
-  <div class="row justify-content-end">
+  <div class="row justify-content-start mt-4">
     <div class="col-9">
       <div class="card_outStyle radius-10 p-3">
         <!-- 標題 -->
         <div class="mx-4">
-          <h4 class="text-white d-flex flex-start my-4">代付</h4>
+          <h4 class="text-white d-flex flex-start my-4">{{ this.$t('bill') }}</h4>
         </div>
         <!-- 內容 -->
         <div class="user_skills">
           <el-table :data="dfData" :header-cell-style="{ background: 'linear-gradient(180deg, rgba(252, 240, 255, 1) 0%, rgba(89, 160, 182, 0.597) 100%)', color: '#606266' }">
-            <el-table-column prop="dfRate" label="費率(%)" width="180" align="center">
+            <el-table-column prop="dfRate" :label="this.$t('rate')" width="180" align="center">
               <template v-slot="{ row }">{{ formatdfRate(row.dfRate) }}</template>
             </el-table-column>
-            <el-table-column prop="isDfActive" label="狀態" align="center">
+            <el-table-column prop="isDfActive" :label="this.$t('status')" align="center">
               <template v-slot="{ row }">{{ formatdfStatus(row.isDfActive) }}</template>
             </el-table-column>
           </el-table>
+          <div class="d-flex mx-4 mt-5">
+            <span class="fs-6 text-deep-danger fw-bold me-2">※</span>
+            <span class="fs-6 text-light2">Payments On Behalf Of (POBO) AND Collections On Behalf Of (COBO)</span>
+          </div>
         </div>
       </div>
     </div>
@@ -194,35 +199,133 @@ export default {
     },
     // 過濾通道名稱
     formatName(payGateCode) {
-      if (payGateCode === 'VNBANK') {
-        return '越南卡轉卡';
+      if (this.$i18n.locale === 'tw') {
+        if (payGateCode === 'VNBANK') {
+          return '越南卡轉卡';
+        }
+        if (payGateCode === 'VNZALO') {
+          return '越南ZALO';
+        }
+        if (payGateCode === 'VNBANKQR') {
+          return '越南銀行掃碼';
+        }
+        if (payGateCode === 'VNMOMO') {
+          return '越南MOMO';
+        }
+        if (payGateCode === 'VNDIRECT') {
+          return '越南直連';
+        }
+        if (payGateCode === 'VNVIETTEL') {
+          return '越南ViettelPay';
+        }
+        if (payGateCode === 'INTER_CHARGE') {
+          return '內充';
+        }
+        if (payGateCode === 'PHGCASH') {
+          return 'PHGCASH';
+        }
+        if (payGateCode === 'PHGCASHQR') {
+          return 'PHGCASH掃碼';
+        }
+        if (payGateCode === 'PHGCASHDIRECT') {
+          return 'PHGCASH直連';
+        }
       }
-      if (payGateCode === 'VNZALO') {
-        return '越南ZALO';
+      if (this.$i18n.locale === 'en') {
+        if (payGateCode === 'VNBANK') {
+          return 'VNBANK';
+        }
+        if (payGateCode === 'VNZALO') {
+          return 'VNZALO';
+        }
+        if (payGateCode === 'VNBANKQR') {
+          return 'Vietnam bank scan code';
+        }
+        if (payGateCode === 'VNMOMO') {
+          return 'Vietnam MOMO';
+        }
+        if (payGateCode === 'VNDIRECT') {
+          return 'Vietnam Direct';
+        }
+        if (payGateCode === 'VNVIETTEL') {
+          return 'Vietnam ViettelPay';
+        }
+        if (payGateCode === 'INTER_CHARGE') {
+          return 'Internal top-up';
+        }
+        if (payGateCode === 'PHGCASH') {
+          return 'PHGCASH';
+        }
+        if (payGateCode === 'PHGCASHQR') {
+          return 'PHGCASH scan code';
+        }
+        if (payGateCode === 'PHGCASHDIRECT') {
+          return 'PHGCASH Direct';
+        }
       }
-      if (payGateCode === 'VNBANKQR') {
-        return '越南銀行掃碼';
+      if (this.$i18n.locale === 'cn') {
+        if (payGateCode === 'VNBANK') {
+          return '越南卡转卡';
+        }
+        if (payGateCode === 'VNZALO') {
+          return '越南ZALO';
+        }
+        if (payGateCode === 'VNBANKQR') {
+          return '越南银行扫码';
+        }
+        if (payGateCode === 'VNMOMO') {
+          return '越南MOMO';
+        }
+        if (payGateCode === 'VNDIRECT') {
+          return '越南直连';
+        }
+        if (payGateCode === 'VNVIETTEL') {
+          return '越南ViettelPay';
+        }
+        if (payGateCode === 'INTER_CHARGE') {
+          return '内充';
+        }
+        if (payGateCode === 'PHGCASH') {
+          return 'PHGCASH';
+        }
+        if (payGateCode === 'PHGCASHQR') {
+          return 'PHGCASH扫码';
+        }
+        if (payGateCode === 'PHGCASHDIRECT') {
+          return 'PHGCASH直连';
+        }
       }
-      if (payGateCode === 'VNMOMO') {
-        return '越南MOMO';
-      }
-      if (payGateCode === 'VNDIRECT') {
-        return '越南直連';
-      }
-      if (payGateCode === 'VNVIETTEL') {
-        return '越南ViettelPay';
-      }
-      if (payGateCode === 'INTER_CHARGE') {
-        return '內充';
-      }
-      if (payGateCode === 'PHGCASH') {
-        return 'PHGCASH';
-      }
-      if (payGateCode === 'PHGCASHQR') {
-        return 'PHGCASH掃碼';
-      }
-      if (payGateCode === 'PHGCASHDIRECT') {
-        return 'PHGCASH直連';
+      if (this.$i18n.locale === 'vn') {
+        if (payGateCode === 'VNBANK') {
+          return 'Chuyển thẻ việt nam';
+        }
+        if (payGateCode === 'VNZALO') {
+          return 'ZALO Việt Nam';
+        }
+        if (payGateCode === 'VNBANKQR') {
+          return 'Mã quét ngân hàng việt nam';
+        }
+        if (payGateCode === 'VNMOMO') {
+          return 'MOMO Việt Nam';
+        }
+        if (payGateCode === 'VNDIRECT') {
+          return 'Trực tiếp Việt Nam';
+        }
+        if (payGateCode === 'VNVIETTEL') {
+          return 'ViettelPay Việt Nam';
+        }
+        if (payGateCode === 'INTER_CHARGE') {
+          return 'Phí nội bộ';
+        }
+        if (payGateCode === 'PHGCASH') {
+          return 'PHGCASH';
+        }
+        if (payGateCode === 'PHGCASHQR') {
+          return 'Mã quét PHGCASH';
+        }
+        if (payGateCode === 'PHGCASHDIRECT') {
+          return 'PHGCASH kết nối trực tiếp';
+        }
       }
       return '測試用';
     },
@@ -232,11 +335,37 @@ export default {
     },
     // 過濾開通狀態
     formatgmtUsed(isActive) {
-      if (isActive === 1) {
-        return '已開通';
+      if (this.$i18n.locale === 'tw') {
+        if (isActive === 1) {
+          return '已開通';
+        }
+        if (isActive === 0) {
+          return '未開通';
+        }
       }
-      if (isActive === 0) {
-        return '未開通';
+      if (this.$i18n.locale === 'en') {
+        if (isActive === 1) {
+          return 'Opened';
+        }
+        if (isActive === 0) {
+          return 'Closed';
+        }
+      }
+      if (this.$i18n.locale === 'vn') {
+        if (isActive === 1) {
+          return 'Đã mở';
+        }
+        if (isActive === 0) {
+          return 'đã đóng';
+        }
+      }
+      if (this.$i18n.locale === 'cn') {
+        if (isActive === 1) {
+          return '已开通';
+        }
+        if (isActive === 0) {
+          return '未开通';
+        }
       }
       return '備用';
     },
@@ -246,11 +375,37 @@ export default {
     },
     // 過濾代付狀態
     formatdfStatus(isDfActive) {
-      if (isDfActive === 1) {
-        return '開啟';
+      if (this.$i18n.locale === 'tw') {
+        if (isDfActive === 1) {
+          return '開啟';
+        }
+        if (isDfActive === 0) {
+          return '關閉';
+        }
       }
-      if (isDfActive === 0) {
-        return '關閉';
+      if (this.$i18n.locale === 'en') {
+        if (isDfActive === 1) {
+          return 'Active';
+        }
+        if (isDfActive === 0) {
+          return 'Closed';
+        }
+      }
+      if (this.$i18n.locale === 'vn') {
+        if (isDfActive === 1) {
+          return 'Tích cực';
+        }
+        if (isDfActive === 0) {
+          return 'Tắt';
+        }
+      }
+      if (this.$i18n.locale === 'cn') {
+        if (isDfActive === 1) {
+          return '开启';
+        }
+        if (isDfActive === 0) {
+          return '关闭';
+        }
       }
       return '測試用';
     },
@@ -288,18 +443,23 @@ export default {
   border: 0;
 }
 .merchant-icon {
-  max-width: 50px;
-  max-height: 50px;
-  background-position: 50%;
+  max-width: 100px;
+  max-height: 100px;
   border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  margin: auto;
+  width: 100px;
+  height: auto;
+  box-shadow: 0px 1px 10px 2px rgba(31, 30, 30, 0.61);
+  -webkit-box-shadow: 0px 1px 10px 2px rgba(31, 30, 30, 0.61);
+  -moz-box-shadow: 0px 1px 10px 2px rgba(31, 30, 30, 0.61);
 }
 // 卡片最外框底樣式
 .card_outStyle {
   background-color: rgb(0 0 0 / 20%);
-  box-shadow: 0 0.3rem 0.8rem rgb(0 0 0 / 12%);
+  // box-shadow: 0 0.3rem 0.8rem rgb(0 0 0 / 12%);
+  box-shadow: 0px 0px 10px 2px rgba(242, 242, 242, 0.61);
+  -webkit-box-shadow: 0px 0px 19px 2px rgba(242, 242, 242, 0.61);
+  -moz-box-shadow: 0px 0px 19px 2px rgba(242, 242, 242, 0.61);
   margin-bottom: 1.5rem;
   border: 0 solid transparent;
 }
@@ -308,7 +468,7 @@ export default {
   padding: 15px 0;
   border-radius: 10px;
   background: rgb(252, 240, 255);
-  background: linear-gradient(90deg, rgba(252, 240, 255, 1) 0%, rgba(89, 160, 182, 0.597) 100%);
+  background: linear-gradient(90deg, rgb(214, 208, 215) 0%, rgba(89, 160, 182, 0.597) 100%);
   box-shadow: 0 0.3rem 0.8rem rgb(0 0 0 / 12%);
   margin-bottom: 1.5rem;
   border: 0 solid transparent;

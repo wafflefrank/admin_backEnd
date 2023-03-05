@@ -606,7 +606,9 @@ export default {
 // 卡片最外框底樣式
 .card_outStyle {
   background-color: rgb(0 0 0 / 20%);
-  box-shadow: 0 0.3rem 0.8rem rgb(0 0 0 / 12%);
+  box-shadow: 0px 0px 10px 2px rgba(242, 242, 242, 0.61);
+  -webkit-box-shadow: 0px 0px 19px 2px rgba(242, 242, 242, 0.61);
+  -moz-box-shadow: 0px 0px 19px 2px rgba(242, 242, 242, 0.61);
   margin-bottom: 1.5rem;
   border: 0 solid transparent;
   border-radius: 15px;

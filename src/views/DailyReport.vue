@@ -15,47 +15,63 @@
         </div>
         <!-- 內容1 -->
         <div class="d-flex mx-4">
-          <div class="d-flex itemList_style justify-content-between flex-fill px-3 me-3">
+          <!-- <div class="d-flex itemList_style justify-content-between flex-fill px-3 me-3">
             <span class="text-white">內充增加金額</span>
             <span> {{ this.icAddAmount }}</span>
-          </div>
+          </div> -->
           <div class="d-flex itemList_style justify-content-between flex-fill px-3 me-3">
             <span class="text-white">代付申請筆數</span>
             <span>{{ this.daiFuOrders || 0 }}</span>
-          </div>
-          <div class="d-flex itemList_style justify-content-between flex-fill px-3">
-            <span class="text-white">下發申請筆數</span>
-            <span>{{ this.xiaFaOrders || 0 }}</span>
-          </div>
-        </div>
-        <!-- 內容2 -->
-        <div class="d-flex mx-4">
-          <div class="d-flex itemList_style justify-content-between flex-fill px-3 me-3">
-            <span class="text-white">內充減少金額</span>
-            <span>{{ this.icSubAmount }}</span>
           </div>
           <div class="d-flex itemList_style justify-content-between flex-fill px-3 me-3">
             <span class="text-white">代付申請金額</span>
             <span>{{ this.daiFuAmount }}</span>
           </div>
-          <div class="d-flex itemList_style justify-content-between flex-fill px-3">
-            <span class="text-white">下發申請金額</span>
-            <span>{{ this.xiaFaAmount }}</span>
-          </div>
-        </div>
-        <!-- 內容3 -->
-        <div class="d-flex mx-4">
-          <div class="d-flex itemList_style justify-content-between flex-fill px-3 me-3">
-            <span class="text-white">內充總手續費</span>
-            <span>{{ this.icFee }}</span>
-          </div>
           <div class="d-flex itemList_style justify-content-between flex-fill px-3 me-3">
             <span class="text-white">代付成功筆數</span>
             <span>{{ this.daiFuSuccessOrders || 0 }}</span>
           </div>
+          <!-- <div class="d-flex itemList_style justify-content-between flex-fill px-3">
+            <span class="text-white">下發申請筆數</span>
+            <span>{{ this.xiaFaOrders || 0 }}</span>
+          </div> -->
+        </div>
+        <!-- 內容2 -->
+        <div class="d-flex mx-4">
+          <!-- <div class="d-flex itemList_style justify-content-between flex-fill px-3 me-3">
+            <span class="text-white">內充減少金額</span>
+            <span>{{ this.icSubAmount }}</span>
+          </div> -->
+          <div class="d-flex itemList_style justify-content-between flex-fill px-3 me-3">
+            <span class="text-white">代付成功金額</span>
+            <span>{{ this.daiFuSuccessAmount }}</span>
+          </div>
+          <div class="d-flex itemList_style justify-content-between flex-fill px-3 me-3">
+            <span class="text-white">代付撤銷筆數</span>
+            <span>{{ this.daiFuFailOrders || 0 }}</span>
+          </div>
+          <div class="d-flex itemList_style justify-content-between flex-fill px-3 me-3">
+            <span class="text-white">代付撤銷金額</span>
+            <span>{{ this.daiFuFailAmount }}</span>
+          </div>
+          <!-- <div class="d-flex itemList_style justify-content-between flex-fill px-3">
+            <span class="text-white">下發申請金額</span>
+            <span>{{ this.xiaFaAmount }}</span>
+          </div> -->
+        </div>
+        <!-- 內容3 -->
+        <div class="d-flex mx-4">
+          <!-- <div class="d-flex itemList_style justify-content-between flex-fill px-3 me-3">
+            <span class="text-white">內充總手續費</span>
+            <span>{{ this.icFee }}</span>
+          </div>
           <div class="d-flex itemList_style justify-content-between flex-fill px-3">
             <span class="text-white">下發成功筆數</span>
             <span>{{ this.xiaFaSuccessOrders || 0 }}</span>
+          </div> -->
+          <div class="d-flex itemList_style justify-content-between flex-fill px-3 me-3">
+            <span class="text-white">代付總手續費</span>
+            <span>{{ this.daiFuSuccessFee }}</span>
           </div>
         </div>
         <!-- 內容4 -->
@@ -63,10 +79,6 @@
           <div class="d-flex itemList_style justify-content-between flex-fill px-3 me-3">
             <span class="text-white">商戶初始餘額</span>
             <span>{{ this.originBalance }}</span>
-          </div>
-          <div class="d-flex itemList_style justify-content-between flex-fill px-3 me-3">
-            <span class="text-white">代付成功金額</span>
-            <span>{{ this.daiFuSuccessAmount }}</span>
           </div>
           <div class="d-flex itemList_style justify-content-between flex-fill px-3">
             <span class="text-white">下發成功金額</span>
@@ -79,10 +91,6 @@
             <span class="text-white">商戶結束餘額</span>
             <span>{{ this.endBalance }}</span>
           </div>
-          <div class="d-flex itemList_style justify-content-between flex-fill px-3 me-3">
-            <span class="text-white">代付撤銷筆數</span>
-            <span>{{ this.daiFuFailOrders || 0 }}</span>
-          </div>
           <div class="d-flex itemList_style justify-content-between flex-fill px-3">
             <span class="text-white">下發撤銷筆數</span>
             <span>{{ this.xiaFaFailOrders || 0 }}</span>
@@ -94,10 +102,6 @@
             <span class="text-white">代收成功筆數</span>
             <span>{{ this.successItems || 0 }}</span>
           </div>
-          <div class="d-flex itemList_style justify-content-between flex-fill px-3 me-3">
-            <span class="text-white">代付撤銷金額</span>
-            <span>{{ this.daiFuFailAmount }}</span>
-          </div>
           <div class="d-flex itemList_style justify-content-between flex-fill px-3">
             <span class="text-white">下發撤銷金額</span>
             <span>{{ this.xiaFaFailAmount }}</span>
@@ -108,10 +112,6 @@
           <div class="d-flex itemList_style justify-content-between flex-fill px-3 me-3">
             <span class="text-white">代收成功金額</span>
             <span>{{ this.successAmount }}</span>
-          </div>
-          <div class="d-flex itemList_style justify-content-between flex-fill px-3 me-3">
-            <span class="text-white">代付總手續費</span>
-            <span>{{ this.daiFuSuccessFee }}</span>
           </div>
           <div class="d-flex itemList_style justify-content-between flex-fill px-3">
             <span class="text-white">下發總手續費</span>
@@ -308,7 +308,9 @@ export default {
 // 卡片最外框底樣式
 .card_outStyle {
   background-color: rgb(0 0 0 / 20%);
-  box-shadow: 0 0.3rem 0.8rem rgb(0 0 0 / 12%);
+  box-shadow: 0px 0px 10px 2px rgba(242, 242, 242, 0.61);
+  -webkit-box-shadow: 0px 0px 19px 2px rgba(242, 242, 242, 0.61);
+  -moz-box-shadow: 0px 0px 19px 2px rgba(242, 242, 242, 0.61);
   margin-bottom: 1.5rem;
   border: 0 solid transparent;
   border-radius: 15px;
@@ -325,12 +327,12 @@ export default {
 .itemList_style {
   padding: 15px 0;
   border-radius: 10px;
-  background: rgb(252, 240, 255);
-  background: linear-gradient(200deg, rgba(252, 240, 255, 1) 0%, rgba(53, 124, 210, 0.597) 100%);
+  // background: rgb(252, 240, 255);
+  // background: linear-gradient(200deg, rgba(252, 240, 255, 1) 0%, rgba(53, 124, 210, 0.597) 100%);
   box-shadow: 0 0.3rem 0.8rem rgb(0 0 0 / 12%);
   margin-bottom: 1.5rem;
   border: 0 solid transparent;
-  width: 33.3%;
+  width: 20%;
   //   金額顏色
   & span {
     color: #e51616;
