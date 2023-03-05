@@ -5,7 +5,7 @@
       <el-container>
         <el-header><HeadBar></HeadBar></el-header>
         <el-main><router-view></router-view></el-main>
-        <el-footer> <span class="text-white">KOLA ©2023</span></el-footer>
+        <el-footer> <span class="text-white">BIOPAY ©2023</span></el-footer>
       </el-container>
     </el-container>
   </div>
