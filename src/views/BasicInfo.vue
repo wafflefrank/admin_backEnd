@@ -46,12 +46,33 @@
               <div class="d-flex flex-row-reverse justify-content-center">
                 <div>
                   <div class="text-start">
-                    <p class="mb-0 fs-6 text-sm font-weight-bold fw-bold">{{ this.$t('merchantID') }} : {{ this.memberID }}</p>
+                    <!-- ID -->
+                    <p class="mb-1 fs-5 text-sm font-weight-bold fw-bold">
+                      {{ this.$t('merchantID') }} : <span class="ms-2">{{ this.memberID }}</span>
+                    </p>
+                    <!-- key -->
                     <div class="d-flex align-items-center">
-                      <p class="mb-0 fs-6 text-sm font-weight-bold fw-bold">{{ this.$t('key') }} :</p>
+                      <p class="mb-0 fs-5 text-sm font-weight-bold fw-bold">{{ this.$t('key') }} :</p>
                       <span class="ms-2 fw-bold">******</span>
+                      <el-button class="check_key_btn fw-bold ms-2" color="#faa30d" size="small" @click="centerDialogVisible = true">{{ this.$t('check') }}</el-button>
                     </div>
-                    <el-button class="check_key_btn mt-1 px-2 fw-bold" color="#faa30d" size="default" @click="centerDialogVisible = true">{{ this.$t('checkKey') }}</el-button>
+                    <!-- name -->
+                    <div class="mb-1 mt-1 fs-5 text-sm font-weight-bold fw-bold d-flex">
+                      <p class="fw-bold me-2">{{ this.$t('name') }} :</p>
+                      <span class="fw-bold">{{ this.memberName }}</span>
+                    </div>
+                    <!-- account -->
+                    <div class="mb-1 mt-1 fs-5 text-sm font-weight-bold fw-bold d-flex">
+                      <p class="fw-bold me-2">{{ this.$t('account') }} :</p>
+                      <span class="fw-bold">{{ this.memberPhone }}</span>
+                    </div>
+                    <!-- bank card -->
+                    <div class="mb-1 mt-1 fs-5 text-sm font-weight-bold fw-bold d-flex align-items-center">
+                      <p class="fw-bold">
+                        {{ this.$t('bankCard') }} : <span class="text-deep2-danger">{{ this.bankNums }}</span> {{ this.$t('cards') }}
+                      </p>
+                      <el-button class="invite_friend_btn fw-bold ms-2" color="#faa30d" size="small" @click="checkBank()">{{ this.$t('check') }}</el-button>
+                    </div>
 
                     <!-- 密鑰彈窗 -->
                     <el-dialog class="key_style" v-model="centerDialogVisible" :title="this.$t('key')" width="30%" center>
@@ -81,18 +102,20 @@
               </div>
             </div>
           </div>
-          <div class="mx-4 d-flex justify-content-between px-3 pb-2">
+          <!-- <div class="mx-4 d-flex justify-content-center px-3 pb-2">
             <p class="fw-bold">{{ this.$t('name') }}:</p>
             <span class="fw-bold">{{ this.memberName }}</span>
-          </div>
-          <div class="mx-4 d-flex justify-content-between px-3 pb-2">
+          </div> -->
+          <!-- <div class="mx-4 d-flex justify-content-center px-3 pb-2">
             <p class="fw-bold">{{ this.$t('account') }}:</p>
             <span class="fw-bold">{{ this.memberPhone }}</span>
-          </div>
-          <div class="mx-4 d-flex justify-content-between px-3 pb-2 align-items-center">
-            <p class="fw-bold">{{ this.$t('bankCard') }} {{ this.bankNums }} {{ this.$t('cards') }}</p>
+          </div> -->
+          <!-- <div class="mx-4 d-flex justify-content-evenly px-3 pb-2 align-items-center">
+            <p class="fw-bold">
+              {{ this.$t('bankCard') }} <span class="text-deep2-danger">{{ this.bankNums }}</span> {{ this.$t('cards') }}
+            </p>
             <el-button class="invite_friend_btn fw-bold" color="#faa30d" size="default" @click="checkBank()">{{ this.$t('check') }}</el-button>
-          </div>
+          </div> -->
           <div class="d-flex justify-content-center">
             <el-button class="invite_friend_btn mt-1 px-4 py-4 fw-bold mb-4" color="#faa30d" size="default" @click="loginDialogVisible = true">{{ this.$t('loginHistory') }}</el-button>
           </div>

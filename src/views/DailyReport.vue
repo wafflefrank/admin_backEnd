@@ -13,55 +13,59 @@
             <el-date-picker v-model="timeValue" type="date" placeholder="Pick a month" @change="getDate()" />
           </div>
         </div>
-        <!-- 內容1 -->
-        <div class="d-flex mx-4">
-          <!-- <div class="d-flex itemList_style justify-content-between flex-fill px-3 me-3">
+        <div class="itemList_outStyle">
+          <div class="now_level mb-3">
+            <span>代付</span>
+          </div>
+          <!-- 內容1 -->
+          <div class="d-flex mx-4">
+            <!-- <div class="d-flex itemList_style justify-content-between flex-fill px-3 me-3">
             <span class="text-white">內充增加金額</span>
             <span> {{ this.icAddAmount }}</span>
           </div> -->
-          <div class="d-flex itemList_style justify-content-between flex-fill px-3 me-3">
-            <span class="text-white">代付申請筆數</span>
-            <span>{{ this.daiFuOrders || 0 }}</span>
-          </div>
-          <div class="d-flex itemList_style justify-content-between flex-fill px-3 me-3">
-            <span class="text-white">代付申請金額</span>
-            <span>{{ this.daiFuAmount }}</span>
-          </div>
-          <div class="d-flex itemList_style justify-content-between flex-fill px-3 me-3">
-            <span class="text-white">代付成功筆數</span>
-            <span>{{ this.daiFuSuccessOrders || 0 }}</span>
-          </div>
-          <!-- <div class="d-flex itemList_style justify-content-between flex-fill px-3">
+            <div class="d-flex itemList_style justify-content-between flex-fill px-3 me-3">
+              <span class="text-white">代付申請筆數</span>
+              <span>{{ this.daiFuOrders || 0 }}</span>
+            </div>
+            <div class="d-flex itemList_style justify-content-between flex-fill px-3 me-3">
+              <span class="text-white">代付申請金額</span>
+              <span>{{ this.daiFuAmount }}</span>
+            </div>
+            <div class="d-flex itemList_style justify-content-between flex-fill px-3 me-3">
+              <span class="text-white">代付成功筆數</span>
+              <span>{{ this.daiFuSuccessOrders || 0 }}</span>
+            </div>
+            <!-- <div class="d-flex itemList_style justify-content-between flex-fill px-3">
             <span class="text-white">下發申請筆數</span>
             <span>{{ this.xiaFaOrders || 0 }}</span>
           </div> -->
-        </div>
-        <!-- 內容2 -->
-        <div class="d-flex mx-4">
-          <!-- <div class="d-flex itemList_style justify-content-between flex-fill px-3 me-3">
+          </div>
+          <!-- 內容2 -->
+          <div class="d-flex mx-4">
+            <!-- <div class="d-flex itemList_style justify-content-between flex-fill px-3 me-3">
             <span class="text-white">內充減少金額</span>
             <span>{{ this.icSubAmount }}</span>
           </div> -->
-          <div class="d-flex itemList_style justify-content-between flex-fill px-3 me-3">
-            <span class="text-white">代付成功金額</span>
-            <span>{{ this.daiFuSuccessAmount }}</span>
-          </div>
-          <div class="d-flex itemList_style justify-content-between flex-fill px-3 me-3">
-            <span class="text-white">代付撤銷筆數</span>
-            <span>{{ this.daiFuFailOrders || 0 }}</span>
-          </div>
-          <div class="d-flex itemList_style justify-content-between flex-fill px-3 me-3">
-            <span class="text-white">代付撤銷金額</span>
-            <span>{{ this.daiFuFailAmount }}</span>
-          </div>
-          <!-- <div class="d-flex itemList_style justify-content-between flex-fill px-3">
+            <div class="d-flex itemList_style justify-content-between flex-fill px-3 me-3">
+              <span class="text-white">代付成功金額</span>
+              <span>{{ this.daiFuSuccessAmount }}</span>
+            </div>
+            <div class="d-flex itemList_style justify-content-between flex-fill px-3 me-3">
+              <span class="text-white">代付撤銷筆數</span>
+              <span>{{ this.daiFuFailOrders || 0 }}</span>
+            </div>
+            <div class="d-flex itemList_style justify-content-between flex-fill px-3 me-3">
+              <span class="text-white">代付撤銷金額</span>
+              <span>{{ this.daiFuFailAmount }}</span>
+            </div>
+            <!-- <div class="d-flex itemList_style justify-content-between flex-fill px-3">
             <span class="text-white">下發申請金額</span>
             <span>{{ this.xiaFaAmount }}</span>
           </div> -->
-        </div>
-        <!-- 內容3 -->
-        <div class="d-flex mx-4">
-          <!-- <div class="d-flex itemList_style justify-content-between flex-fill px-3 me-3">
+          </div>
+          <!-- 內容3 -->
+          <div class="d-flex mx-4">
+            <!-- <div class="d-flex itemList_style justify-content-between flex-fill px-3 me-3">
             <span class="text-white">內充總手續費</span>
             <span>{{ this.icFee }}</span>
           </div>
@@ -69,9 +73,10 @@
             <span class="text-white">下發成功筆數</span>
             <span>{{ this.xiaFaSuccessOrders || 0 }}</span>
           </div> -->
-          <div class="d-flex itemList_style justify-content-between flex-fill px-3 me-3">
-            <span class="text-white">代付總手續費</span>
-            <span>{{ this.daiFuSuccessFee }}</span>
+            <div class="d-flex itemList_style justify-content-between flex-fill px-3 me-3 mb-0">
+              <span class="text-white">代付總手續費</span>
+              <span>{{ this.daiFuSuccessFee }}</span>
+            </div>
           </div>
         </div>
         <!-- 內容4 -->
@@ -324,15 +329,34 @@ export default {
     color: #fff;
   }
 }
+.itemList_outStyle {
+  // background: rgb(252, 240, 255);
+  // background: linear-gradient(200deg, rgba(252, 240, 255, 1) 0%, rgba(53, 124, 210, 0.597) 100%);
+  padding: 0px 0px 20px;
+  border-radius: 15px;
+  background-color: rgb(0 0 0 / 20%);
+  box-shadow: 0 0.3rem 0.8rem rgb(0 0 0 / 12%);
+  & .now_level {
+    width: 120px;
+    text-align: center;
+    background: rgb(255, 225, 169);
+    color: rgb(53, 53, 53);
+    font-weight: bold;
+    border-top-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+    padding: 5px 15px;
+    box-shadow: rgba(136, 165, 191, 0.48) 0px 0px 2px 0px, rgba(255, 255, 255, 0.419) 0px 2px 10px 0px;
+  }
+}
 .itemList_style {
-  padding: 15px 0;
+  // padding: 5px 0;
   border-radius: 10px;
   // background: rgb(252, 240, 255);
   // background: linear-gradient(200deg, rgba(252, 240, 255, 1) 0%, rgba(53, 124, 210, 0.597) 100%);
-  box-shadow: 0 0.3rem 0.8rem rgb(0 0 0 / 12%);
+  // box-shadow: 0 0.3rem 0.8rem rgb(0 0 0 / 12%);
   margin-bottom: 1.5rem;
   border: 0 solid transparent;
-  width: 20%;
+  // width: 20%;
   //   金額顏色
   & span {
     color: #e51616;

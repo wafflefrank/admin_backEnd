@@ -172,6 +172,38 @@ export default {
             this.$swal.fire('登入失敗!', `${res.data.msg}`, 'error');
             this.reload_Captcha();
           }
+        }
+        if (this.isGoogleLogin === null) {
+          if (res.data.code === 200) {
+            console.log(res.data.msg);
+            this.$swal.fire('登入成功!', '登入成功', 'success');
+            // localStorage.setItem('user', this.addForm_Data);
+            this.$router.push('/');
+          } else if (res.data.code === 422) {
+            this.wrongMsg.phone = _.findKey(loginMsg, ['param', 'phone']);
+            console.log(this.wrongMsg.phone);
+            if (this.wrongMsg.phone !== undefined) {
+              this.$swal.fire('登入失敗!', `${res.data.msg.phone.msg}`, 'error');
+            }
+            this.wrongMsg.password = _.findKey(loginMsg, ['param', 'password']);
+            console.log(this.wrongMsg.password);
+            if (this.wrongMsg.password !== undefined) {
+              this.$swal.fire('登入失敗!', `${res.data.msg.password.msg}`, 'error');
+            }
+            this.wrongMsg.captcha = _.findKey(loginMsg, ['param', 'captcha']);
+            console.log(this.wrongMsg.captcha);
+            if (this.wrongMsg.captcha !== undefined) {
+              this.$swal.fire('登入失敗!', `${res.data.msg.captcha.msg}`, 'error');
+            } else if (res.data.code === 500) {
+              console.log(res.data.msg);
+              this.$swal.fire('登入失敗!', `${res.data.msg}`, 'error');
+            }
+            this.reload_Captcha();
+          } else {
+            console.log(res.data.msg);
+            this.$swal.fire('登入失敗!', `${res.data.msg}`, 'error');
+            this.reload_Captcha();
+          }
         } else {
           console.log(this.isGoogleLogin, '啟動');
           this.isGoogleLogin = true;
