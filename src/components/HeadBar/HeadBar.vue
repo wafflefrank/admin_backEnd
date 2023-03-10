@@ -38,7 +38,7 @@
 
           <el-menu-item index="4-2"><img src="../../assets/flag/en_US.jpeg" alt="#" class="language_img" /><el-radio label="US">2</el-radio></el-menu-item>
         </el-radio-group> -->
-        <el-dropdown  size="large" trigger="click">
+        <el-dropdown size="large" trigger="click">
           <span class="el-dropdown-link">
             <el-icon class="el-icon--right">
               <i class="fa-solid fa-bars fs-2"></i>
@@ -58,18 +58,26 @@
     </div>
   </header>
   <!-- 修改登入密碼彈窗 -->
-  <el-dialog class="changePwdModel_style" v-model="changePwd" title="修改密碼" width="50%" center>
-    <el-input class="addInfo_style mt-3" v-model="changePwd_Form.oldPassword" placeholder="舊密碼" type="password"> <template #prepend>舊密碼</template> </el-input>
+  <el-dialog class="changePwdModel_style" v-model="changePwd" :title="this.$t('changePwd')" width="50%" center>
+    <el-input class="addInfo_style mt-3" v-model="changePwd_Form.oldPassword" :placeholder="this.$t('oldPwd')" type="password">
+      <template #prepend>{{ this.$t('oldPwd') }}</template>
+    </el-input>
 
-    <el-input class="addInfo_style mt-3" v-model="changePwd_Form.newPassword" placeholder="新密碼" type="password"> <template #prepend>新密碼</template> </el-input>
+    <el-input class="addInfo_style mt-3" v-model="changePwd_Form.newPassword" :placeholder="this.$t('newPwd')" type="password">
+      <template #prepend>{{ this.$t('newPwd') }}</template>
+    </el-input>
 
-    <el-input class="addInfo_style mt-3" v-model="changePassword_sec" placeholder="確認密碼" type="password"> <template #prepend>確認密碼</template> </el-input>
+    <el-input class="addInfo_style mt-3" v-model="changePassword_sec" :placeholder="this.$t('confirmPwd')" type="password">
+      <template #prepend>{{ this.$t('confirmPwd') }}</template>
+    </el-input>
 
-    <el-input class="addInfo_style mt-3" v-model="changePwd_Form.googleVerifyCode" placeholder="Google驗證碼"> <template #prepend>Google驗證碼</template> </el-input>
+    <el-input class="addInfo_style mt-3" v-model="changePwd_Form.googleVerifyCode" :placeholder="this.$t('googleCode')">
+      <template #prepend>{{ this.$t('googleCode') }}</template>
+    </el-input>
 
     <div class="d-flex justify-content-center">
-      <el-button color="#faa30d" plain class="cancel_btn p-4 mt-4 fw-bold fs-5 align-self-center" size="default" @click="cancelBill()">取消</el-button>
-      <el-button color="#faa30d" class="confirm_btn p-4 mt-4 fw-bold fs-5 align-self-center" size="default" @click="conFirmBill()">確定</el-button>
+      <el-button color="#faa30d" plain class="cancel_btn p-4 mt-4 fw-bold fs-5 align-self-center" size="default" @click="cancelBill()">{{ this.$t('Cancel') }}</el-button>
+      <el-button color="#faa30d" class="confirm_btn p-4 mt-4 fw-bold fs-5 align-self-center" size="default" @click="conFirmBill()">{{ this.$t('confirm') }}</el-button>
     </div>
   </el-dialog>
 </template>
@@ -99,7 +107,7 @@ export default {
         googleVerifyCode: '',
       },
       // 變更語言
-      radio: '選擇語言',
+      radio: this.$t('chooseLanguage'),
     };
   },
   methods: {
@@ -127,9 +135,9 @@ export default {
       this.$http.get('/open/logout/').then((res) => {
         if (res.data.code === 200) {
           this.$router.push('/login');
-          ElMessage({ showClose: true, message: '已登出!', type: 'success' });
+          ElMessage({ showClose: true, message: `${this.$t('alreadyLogout')}!`, type: 'success' });
         } else {
-          this.$swal.fire('登出失敗!', `${res.data.msg}`, 'error');
+          this.$swal.fire(`${this.$t('logoutFail')}!`, `${res.data.msg}`, 'error');
         }
       });
     },
@@ -140,11 +148,11 @@ export default {
         console.log(res.data.msg);
         const addMsg = res.data.msg;
         if (this.changePwd_Form.newPassword !== this.changePassword_sec) {
-          ElMessage({ showClose: true, message: '二次密碼不一致', type: 'warning' });
+          ElMessage({ showClose: true, message: `${this.$t('newPwd_notSame')}!`, type: 'warning' });
         }
         if (res.data.code === 200) {
           this.changePwd = false;
-          this.$swal.fire('密碼更改成功!', `${res.data.msg}`, 'success');
+          this.$swal.fire(`${this.$t('pwdChange_success')}!`, `${res.data.msg}`, 'success');
           this.changePwd_Form.oldPassword = '';
           this.changePwd_Form.newPassword = '';
         } else if (res.data.code === 422) {

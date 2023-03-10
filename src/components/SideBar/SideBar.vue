@@ -52,19 +52,19 @@
   </header>
   <el-dialog class="QRModel_style" v-model="QRDialogVisible" :title="this.$t('googleAuthenticator')" width="50%" center>
     <div class="d-flex justify-content-center align-items-center mb-3">
-      <span class="text-white">驗證登入</span>
+      <span class="text-white">{{ this.$t('LoginVerification') }}</span>
       <el-switch class="google_switch" v-model="isGoogleOn.isLoginGoogleVerify" style="--el-switch-on-color: #faa30d; --el-switch-off-color: #2c2c2c" @change="toggleMode(isGoogleOn.isLoginGoogleVerify)" />
     </div>
     <div class="d-flex justify-content-center align-items-center">
       <qrcode-vue v-if="googleAuthLabel === null" :value="image_QR" :size="size" level="H" />
     </div>
     <div class="d-flex flex-column" v-if="googleAuthLabel !== null">
-      <el-input class="googleCode_style" v-model="google_code" placeholder="谷歌驗證碼"> <template #prepend>Goole驗證器</template> </el-input>
-      <el-button color="#faa30d" class="getCode_btn mt-2 px-1 fw-bold" size="default" @click="getCode()">獲取驗證碼</el-button>
+      <el-input class="googleCode_style" v-model="google_code" :placeholder="this.$t('googleCode')"> <template #prepend>{{ this.$t('googleAuthenticator') }}</template> </el-input>
+      <el-button color="#faa30d" class="getCode_btn mt-2 px-1 fw-bold" size="default" @click="getCode()">{{ this.$t('getCode') }}</el-button>
     </div>
     <div class="d-flex mx-4 mt-5">
       <span class="fs-6 text-deep-danger fw-bold me-2">※</span>
-      <span class="fs-6 text-white">請使用谷歌驗證器掃描二維碼</span>
+      <span class="fs-6 text-white">{{ this.$t('googleMemo') }}</span>
     </div>
   </el-dialog>
 </template>

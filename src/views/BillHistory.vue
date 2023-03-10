@@ -5,7 +5,7 @@
       <div class="card_outStyle radius-10 p-3">
         <!-- 標題 -->
         <div class="d-flex align-items-center justify-content-between mx-4">
-          <h4 class="text-white d-flex flex-start my-4">結算紀錄</h4>
+          <h4 class="text-white d-flex flex-start my-4">{{ this.$t('billHistory') }}</h4>
         </div>
         <!-- 搜尋內容 -->
         <el-form ref="search_form" :model="searchOption" class="searchForm_style">
@@ -14,23 +14,23 @@
             <el-col :span="24" class="add_left_style_1 mx-4">
               <div class="d-flex">
                 <!-- 支付狀態 🍖-->
-                <el-form-item label="結算狀態 :" class="thirdPay_style me-5" prop="isDone">
-                  <el-select v-model="searchOption.isDone" placeholder="選擇類型" @change="choosePay_type(searchOption.isDone)" clearable>
-                    <el-option label="已結算" :value="true"></el-option>
-                    <el-option label="未結算" :value="false"></el-option>
+                <el-form-item :label="`${this.$t('settlementStatus')} :`" class="thirdPay_style me-5" prop="isDone">
+                  <el-select v-model="searchOption.isDone" :placeholder="this.$t('choose_status')" @change="choosePay_type(searchOption.isDone)" clearable>
+                    <el-option :label="this.$t('settled')" :value="true"></el-option>
+                    <el-option :label="this.$t('notSettled')" :value="false"></el-option>
                   </el-select>
                 </el-form-item>
                 <!-- 收款人🍖 -->
-                <el-form-item label="收款人 :" class="thirdPay_style me-5" prop="id">
-                  <el-input v-model="searchOption.bankOwner" placeholder="請輸入收款人" />
+                <el-form-item :label="`${this.$t('beneficiaryName')} :`" class="thirdPay_style me-5" prop="id">
+                  <el-input v-model="searchOption.bankOwner" :placeholder="this.$t('beneficiaryName')" />
                 </el-form-item>
                 <!-- 訂單ID🍖 -->
-                <el-form-item label="訂單 ID :" class="thirdPay_style me-5" prop="merchantBillId">
-                  <el-input v-model="searchOption.merchantBillId" placeholder="請輸入訂單ID" />
+                <el-form-item :label="`${this.$t('orderID')} :`" class="thirdPay_style me-5" prop="merchantBillId">
+                  <el-input v-model="searchOption.merchantBillId" :placeholder="this.$t('typeOrderID')" />
                 </el-form-item>
                 <!-- 選擇日期 -->
-                <el-form-item label="選擇日期 :" class="thirdPay_style me-5" prop="timeValue">
-                  <el-date-picker v-model="timeValue" type="date" placeholder="選擇日期" />
+                <el-form-item :label="`${this.$t('choose_date')} : `" class="thirdPay_style me-5" prop="timeValue">
+                  <el-date-picker v-model="timeValue" type="date" :placeholder="this.$t('choose_date')" />
                 </el-form-item>
                 <!-- 收款帳號 -->
                 <!-- <el-form-item label="收款帳號 :" class="thirdPay_style me-5" prop="id">
@@ -40,8 +40,8 @@
             </el-col>
           </el-row>
           <div class="text-center justify-content-between mt-3">
-            <el-button color="#faa30d" class="search_btn mt-1 px-5 fw-bold" size="default" @click.prevent="resetForm()">重置</el-button>
-            <el-button color="#faa30d" class="search_btn mt-1 px-5 fw-bold" size="default" @click="doSearch()">查詢</el-button>
+            <el-button color="#faa30d" class="search_btn mt-1 px-5 fw-bold" size="default" @click.prevent="resetForm()">{{ this.$t('reset') }}</el-button>
+            <el-button color="#faa30d" class="search_btn mt-1 px-5 fw-bold" size="default" @click="doSearch()">{{ this.$t('search') }}</el-button>
           </div>
         </el-form>
       </div>
@@ -53,27 +53,30 @@
       <div class="card_outStyle radius-10 p-4">
         <div class="col-12">
           <div class="d-flex align-items-center justify-content-end">
-            <el-button color="#faa30d" class="search_btn px-5 fw-bold" size="default" @click="openExcelModal()">導出數據</el-button>
+            <el-button color="#faa30d" class="search_btn px-5 fw-bold" size="default" @click="openExcelModal()">{{ this.$t('exportData') }}</el-button>
           </div>
         </div>
 
         <!-- 查詢內容 -->
         <div class="bill_table mt-3">
           <el-table id="excelTable" :data="orderTable" :header-cell-style="{ background: 'linear-gradient(180deg, rgba(252, 240, 255, 1) 0%, rgba(89, 160, 182, 0.597) 100%)', color: '#606266' }" v-loading="loading_table" element-loading-background="rgba(122, 122, 122, 0.1)">
+            <!-- # -->
             <el-table-column prop="id" label="#" align="center" width="120">
               <!-- <template v-slot="{ row }">{{ formatName(row.payGateCode) }}</template> -->
             </el-table-column>
-            <el-table-column prop="merchant_bill_id" label="代付單號" align="center">
+            <!-- 代付單號 -->
+            <el-table-column prop="merchant_bill_id" :label="this.$t('POBO_ID')" align="center">
               <!-- <template v-slot="{ row }">{{ formatRate(row.rate) }}</template> -->
             </el-table-column>
-            <el-table-column prop="bankOwner" label="商戶收款訊息" align="center">
+            <!-- 收款人資訊 -->
+            <el-table-column prop="bankOwner" :label="this.$t('merchantInfo')" align="center" width="250">
               <template v-slot="{ row }">
                 <el-popover effect="light" trigger="hover" placement="top" width="auto">
                   <template #default>
-                    <div>持卡人: {{ row.bankOwner }}</div>
-                    <div>銀行名稱: {{ row.bankName }}</div>
-                    <div>支行名稱:</div>
-                    <div>銀行名稱: {{ row.bankAccount }}</div>
+                    <div>{{ this.$t('bankOwner') }} : {{ row.bankOwner }}</div>
+                    <div>{{ this.$t('bankName') }} : {{ row.bankName }}</div>
+                    <div>{{ this.$t('branchBank') }} :</div>
+                    <div>{{ this.$t('bankAccount') }} : {{ row.bankAccount }}</div>
                   </template>
                   <template #reference>
                     <el-tag>{{ row.bankOwner }}</el-tag>
@@ -81,15 +84,16 @@
                 </el-popover>
               </template>
             </el-table-column>
-            <el-table-column prop="mainCardBankOwner" label="平台出款訊息" align="center">
+            <!-- 平台出款訊息 -->
+            <el-table-column prop="mainCardBankOwner" :label="this.$t('platformPaymentInfo')" align="center" width="250">
               <template v-slot="{ row }">
                 <div v-if="row.isDone === 1">
                   <el-popover effect="light" trigger="hover" placement="top" width="auto">
                     <template #default>
-                      <div>持卡人: {{ row.mainCardBankOwner }}</div>
-                      <div>銀行名稱: {{ row.mainCardBankName }}</div>
-                      <div>支行名稱:</div>
-                      <div>銀行名稱: {{ row.mainCardBankAccount }}</div>
+                      <div>{{ this.$t('bankOwner') }} : {{ row.mainCardBankOwner }}</div>
+                      <div>{{ this.$t('bankName') }} : {{ row.mainCardBankName }}</div>
+                      <div>{{ this.$t('branchBank') }} :</div>
+                      <div>{{ this.$t('bankAccount') }} : {{ row.mainCardBankAccount }}</div>
                     </template>
                     <template #reference>
                       <el-tag>{{ row.mainCardBankOwner }}</el-tag>
@@ -108,42 +112,47 @@
                 </el-tag>
               </template> -->
             </el-table-column>
-            <el-table-column prop="isDf" label="結算類型" align="center">
+            <!-- 結算類型 -->
+            <el-table-column prop="isDf" :label="this.$t('settleType')" align="center">
               <template v-slot="{ row }">
                 <el-tag effect="dark" :type="row.isDf === 1 ? 'success' : 'warning'">
                   {{ formatisDf(row.isDf) }}
                 </el-tag>
               </template>
             </el-table-column>
-            <el-table-column sortable prop="amount" label="結算金額" align="center" :formatter="stateFormat">
+            <!-- 結算金額 -->
+            <el-table-column sortable prop="amount" :label="this.$t('settlement_amount')" align="center" :formatter="stateFormat">
               <!-- <template v-slot="{ row }">
                   <el-tag :type="row.isActive === 1 ? 'success' : 'danger'">
                     {{ formatgmtUsed(row.isActive) }}
                   </el-tag>
                 </template> -->
             </el-table-column>
-            <el-table-column prop="bankFee" label="手續費" align="center" width="100" :formatter="stateFormat">
+            <!-- 手續費 -->
+            <el-table-column prop="bankFee" :label="this.$t('Fee')" align="center" width="100" :formatter="stateFormat">
               <!-- <template v-slot="{ row }">
                 <el-tag :type="row.isPaid === 1 ? 'success' : 'danger'">
                   {{ formatisPaid(row.isPaid) }}
                 </el-tag>
               </template> -->
             </el-table-column>
-            <el-table-column prop="amount" label="實結金額" align="center" :formatter="stateFormat">
+            <!-- 實結金額 -->
+            <el-table-column prop="amount" :label="this.$t('actualAmount')" align="center" :formatter="stateFormat">
               <!-- <template v-slot="{ row }">
                 <el-tag :type="row.isGotReceipt === 1 ? 'success' : 'danger'">
                   {{ formatisGotReceipt(row.isGotReceipt) }}
                 </el-tag>
               </template> -->
             </el-table-column>
-            <el-table-column prop="createdAt" label="創建時間" align="center">
+            <!-- 創建時間 -->
+            <el-table-column prop="createdAt" :label="this.$t('creatTime')" align="center">
               <!-- <template v-slot="{ row }">
                 <el-tag :type="row.isGotReceipt === 1 ? 'success' : 'danger'">
                   {{ formatisGotReceipt(row.isGotReceipt) }}
                 </el-tag>
               </template> -->
             </el-table-column>
-            <el-table-column prop="isDone" label="狀態" align="center" width="150">
+            <el-table-column prop="isDone" :label="this.$t('status')" align="center" width="150">
               <template v-slot="{ row }">
                 <el-tag effect="dark" :type="row.isDone === 1 ? 'success' : 'danger'">
                   {{ formatisDone(row.isDone) }}
@@ -153,14 +162,14 @@
                 </el-tag>
               </template>
             </el-table-column>
-            <el-table-column prop="billType" label="操作" align="center" width="100">
+            <el-table-column prop="billType" :label="this.$t('operating')" align="center" width="200">
               <template v-slot="{ row }">
                 <el-popover trigger="click" v-model="photoVisible" placement="top">
                   <p class="mb-2">#{{ row.id }}的結算憑證</p>
                   <el-image style="width: 100px; height: 100px" :src="row.photos" :zoom-rate="1.5" :preview-src-list="urlList" :initial-index="4" fit="cover" />
                   <template #reference>
                     <div class="setting_style d-flex align-items-center justify-content-center text-yellow">
-                      <span ref="buttonRef" @click="doResendNotify(row)" @keydown="doResendNotify(row)">查看憑證</span>
+                      <span ref="buttonRef" @click="doResendNotify(row)" @keydown="doResendNotify(row)">{{ this.$t('checkCertication') }}</span>
                     </div>
                   </template>
                 </el-popover>
@@ -173,29 +182,29 @@
             <el-pagination :page-sizes="[10, 30, 50, 100]" layout="sizes,prev, pager, next" :total="totalPage" class="pageStyle d-flex flex-row-reverse" v-model:page-size="pageSize" :current-page="currentPage" @current-change="handleCurrentChange" @size-change="sizeChange"> </el-pagination>
           </div>
           <!-- EXCEL導出彈窗 -->
-          <el-dialog class="excelModel_style" v-model="excelDialogVisible" title="選擇導出範圍" width="20%" center>
+          <el-dialog class="excelModel_style" v-model="excelDialogVisible" :title="this.$t('choose_range')" width="20%" center>
             <div class="d-flex flex-column align-items-start">
-              <span class="mb-2 fs-5 text-deep2">日期範圍</span>
-              <el-date-picker class="mb-4" v-model="dateRange" type="daterange" range-separator="to" start-placeholder="起始日期" end-placeholder="結束日期" />
-              <span class="mb-2 fs-5">時間類型</span>
+              <span class="mb-2 fs-5 text-deep2">{{ this.$t('dateRange') }}</span>
+              <el-date-picker class="mb-4" v-model="dateRange" type="daterange" range-separator="to" :start-placeholder="this.$t('startTime')" :end-placeholder="this.$t('endTime')" />
+              <span class="mb-2 fs-5">{{ this.$t('timeType') }}</span>
               <el-radio-group class="mb-4" v-model="radio2" @change="searchDate(radio2)">
-                <el-radio-button label="創建時間" />
-                <el-radio-button label="支付時間" />
+                <el-radio-button :label="this.$t('creatTime')" />
+                <el-radio-button :label="this.$t('paymentTime')" />
               </el-radio-group>
 
-              <span class="mb-2 fs-5">語言</span>
+              <span class="mb-2 fs-5">{{ this.$t('language') }}</span>
               <el-radio-group class="mb-4" v-model="radio2" @change="searchDate(radio2)">
-                <el-radio-button label="中文" />
-                <el-radio-button label="英文" />
+                <el-radio-button :label="this.$t('Chinese')" />
+                <el-radio-button :label="this.$t('English')" />
               </el-radio-group>
 
-              <span class="mb-2 fs-5">快速導出</span>
+              <span class="mb-2 fs-5">{{ this.$t('quickExport') }}</span>
               <div class="d-flex align-self-center">
-                <el-button color="#faa30d" class="datePick_btn px-5 py-4 mt-4 fw-bold fs-6 align-self-center" size="small" @click="openExcelModal()">當日</el-button>
-                <el-button color="#faa30d" class="datePick_btn px-5 py-4 mt-4 fw-bold fs-6 align-self-center" size="small" @click="openExcelModal()">近三天</el-button>
-                <el-button color="#faa30d" class="datePick_btn px-5 py-4 mt-4 fw-bold fs-6 align-self-center" size="small" @click="openExcelModal()">近7天</el-button>
+                <el-button color="#faa30d" class="datePick_btn px-4 py-4 mt-4 fw-bold fs-6 align-self-center" size="small" @click="openExcelModal()">{{ this.$t('today') }}</el-button>
+                <el-button color="#faa30d" class="datePick_btn px-4 py-4 mt-4 fw-bold fs-6 align-self-center" size="small" @click="openExcelModal()">{{ this.$t('last3Days') }}</el-button>
+                <el-button color="#faa30d" class="datePick_btn px-4 py-4 mt-4 fw-bold fs-6 align-self-center" size="small" @click="openExcelModal()">{{ this.$t('last7Days') }}</el-button>
               </div>
-              <el-button color="#faa30d" class="export_btn p-4 mt-4 fw-bold fs-5 align-self-center" size="default" @click="openExcelModal()">確認導出</el-button>
+              <el-button color="#faa30d" class="export_btn p-4 mt-4 fw-bold fs-5 align-self-center" size="default" @click="openExcelModal()">{{ this.$t('confirm') }}</el-button>
             </div>
           </el-dialog>
         </div>
@@ -258,21 +267,73 @@ export default {
   methods: {
     // 過濾支付狀態
     formatisDf(isDf) {
-      if (isDf === 1) {
-        return '代付';
+      if (this.$i18n.locale === 'tw') {
+        if (isDf === 1) {
+          return '代付';
+        }
+        if (isDf === 0) {
+          return '下發';
+        }
       }
-      if (isDf === 0) {
-        return '下發';
+      if (this.$i18n.locale === 'cn') {
+        if (isDf === 1) {
+          return '代付';
+        }
+        if (isDf === 0) {
+          return '下发';
+        }
+      }
+      if (this.$i18n.locale === 'en') {
+        if (isDf === 1) {
+          return 'POBO';
+        }
+        if (isDf === 0) {
+          return 'Withdrawal';
+        }
+      }
+      if (this.$i18n.locale === 'vn') {
+        if (isDf === 1) {
+          return 'trả thay';
+        }
+        if (isDf === 0) {
+          return 'Withdrawal';
+        }
       }
       return '備用';
     },
     // 過濾回執狀態
     formatisGotReceipt(isGotReceipt) {
-      if (isGotReceipt === 1) {
-        return '已收到回執';
+      if (this.$i18n.locale === 'tw') {
+        if (isGotReceipt === 1) {
+          return '已收到回執';
+        }
+        if (isGotReceipt === 0) {
+          return '暫無回執';
+        }
       }
-      if (isGotReceipt === 0) {
-        return '暫無回執';
+      if (this.$i18n.locale === 'cn') {
+        if (isGotReceipt === 1) {
+          return '已收到回执';
+        }
+        if (isGotReceipt === 0) {
+          return '暂无回执';
+        }
+      }
+      if (this.$i18n.locale === 'en') {
+        if (isGotReceipt === 1) {
+          return 'Received';
+        }
+        if (isGotReceipt === 0) {
+          return 'Not received';
+        }
+      }
+      if (this.$i18n.locale === 'vn') {
+        if (isGotReceipt === 1) {
+          return 'biên lai nhận được';
+        }
+        if (isGotReceipt === 0) {
+          return 'không nhận';
+        }
       }
       return '備用';
     },
@@ -289,21 +350,73 @@ export default {
 
     // 過濾狀態結果
     formatisDone(isDone) {
-      if (isDone === 1) {
-        return '已結算';
+      if (this.$i18n.locale === 'tw') {
+        if (isDone === 1) {
+          return '已結算';
+        }
+        if (isDone === 0) {
+          return '未結算';
+        }
       }
-      if (isDone === 0) {
-        return '未結算';
+      if (this.$i18n.locale === 'cn') {
+        if (isDone === 1) {
+          return '已結算';
+        }
+        if (isDone === 0) {
+          return '未結算';
+        }
+      }
+      if (this.$i18n.locale === 'en') {
+        if (isDone === 1) {
+          return 'Settled';
+        }
+        if (isDone === 0) {
+          return 'Not Settled';
+        }
+      }
+      if (this.$i18n.locale === 'vn') {
+        if (isDone === 1) {
+          return 'Định cư';
+        }
+        if (isDone === 0) {
+          return 'bất ổn';
+        }
       }
       return '備用';
     },
     // 過濾撤銷狀態
     formatisRefund(isRefund) {
-      if (isRefund === 1) {
-        return '已撤銷';
+      if (this.$i18n.locale === 'tw') {
+        if (isRefund === 1) {
+          return '已撤銷';
+        }
+        if (isRefund === 0) {
+          return '未撤銷';
+        }
       }
-      if (isRefund === 0) {
-        return '未撤銷';
+      if (this.$i18n.locale === 'cn') {
+        if (isRefund === 1) {
+          return '已撤销';
+        }
+        if (isRefund === 0) {
+          return '未撤销';
+        }
+      }
+      if (this.$i18n.locale === 'en') {
+        if (isRefund === 1) {
+          return 'Revoked';
+        }
+        if (isRefund === 0) {
+          return 'Not Revoked';
+        }
+      }
+      if (this.$i18n.locale === 'vn') {
+        if (isRefund === 1) {
+          return 'thu hồi';
+        }
+        if (isRefund === 0) {
+          return 'không bị thu hồi';
+        }
       }
       return '備用';
     },

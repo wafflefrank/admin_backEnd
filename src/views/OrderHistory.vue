@@ -5,57 +5,57 @@
       <div class="card_outStyle radius-10 p-3">
         <!-- 標題 -->
         <div class="d-flex align-items-center justify-content-between mx-4">
-          <h4 class="text-white d-flex flex-start my-4">訂單紀錄</h4>
+          <h4 class="text-white d-flex flex-start my-4">{{ this.$t('orderHistory') }}</h4>
           <div class="d-flex text-start">
             <i class="fa-solid fa-sack-dollar text-white fs-5 mb-2"
               ><span class="text-light2 ms-2" style="margin-right: 100px"
-                >總金額 : <span class="fs-6 text-white">{{ this.total }} $</span></span
+                >{{ this.$t('orderHistory') }} : <span class="fs-6 text-white">{{ this.total }} $</span></span
               ></i
             >
             <i class="fa-solid fa-hand-holding-dollar text-white fs-5"
               ><span class="text-light2 ms-2"
-                >總手續費 : <span class="fs-6 text-white"> {{ this.totalFee }} $</span></span
+                >{{ this.$t('allFee') }} : <span class="fs-6 text-white"> {{ this.totalFee }} $</span></span
               ></i
             >
           </div>
         </div>
         <!-- 搜尋內容 -->
-        <el-form ref="search_form" :model="searchOption" class="searchForm_style">
+        <el-form ref="search_form" :model="searchOption" class="searchForm_style mx-4">
           <el-row>
             <!-- 資料內容 -->
             <el-col :span="24" class="add_left_style_1">
               <div class="d-flex justify-content-between">
-                <!-- 第三方平台🍖 -->
-                <el-form-item label="訂單 ID :" class="thirdPay_style me-2" prop="id">
-                  <el-input v-model="searchOption.id" placeholder="請輸入訂單ID" />
+                <!-- orderID -->
+                <el-form-item :label="`${this.$t('orderID')} :`" class="thirdPay_style me-2" prop="id">
+                  <el-input v-model="searchOption.id" :placeholder="this.$t('orderID')" />
                 </el-form-item>
-                <!-- 平台種類🍖 -->
-                <el-form-item label="商戶訂單ID :" class="thirdPay_style me-2" prop="merchant_order_id">
-                  <el-input v-model="searchOption.merchant_order_id" placeholder="請輸入商戶ID" />
+                <!-- merchantOrderID🍖 -->
+                <el-form-item :label="`${this.$t('merchantOrderID')} :`" class="thirdPay_style me-2" prop="merchant_order_id">
+                  <el-input v-model="searchOption.merchant_order_id" :placeholder="this.$t('merchantOrderID')" />
                 </el-form-item>
                 <!-- 支付狀態 🍖-->
-                <el-form-item label="支付狀態" class="thirdPay_style me-2" prop="isPaid">
-                  <el-select v-model="searchOption.isPaid" placeholder="選擇類型" @change="choosePay_type(searchOption.isPaid)" clearable>
-                    <el-option label="已支付" :value="true"></el-option>
-                    <el-option label="未支付" :value="false"></el-option>
+                <el-form-item :label="this.$t('paymentStatus')" class="thirdPay_style me-2" prop="isPaid">
+                  <el-select v-model="searchOption.isPaid" :placeholder="this.$t('choose_status')" @change="choosePay_type(searchOption.isPaid)" clearable>
+                    <el-option :label="this.$t('paid')" :value="true"></el-option>
+                    <el-option :label="this.$t('unPaid')" :value="false"></el-option>
                   </el-select>
                 </el-form-item>
                 <!-- 通知狀態 🍖-->
-                <el-form-item label="通知狀態" class="thirdPay_style me-2" prop="isGotReceipt">
-                  <el-select v-model="searchOption.isGotReceipt" placeholder="選擇類型" @change="chooseReceipt_status(searchOption.isGotReceipt)" clearable>
-                    <el-option label="收到回執" :value="true"></el-option>
-                    <el-option label="暫無回執" :value="false"></el-option>
+                <el-form-item :label="this.$t('notificationStatus')" class="thirdPay_style me-2" prop="isGotReceipt">
+                  <el-select v-model="searchOption.isGotReceipt" :placeholder="this.$t('choose_status')" @change="chooseReceipt_status(searchOption.isGotReceipt)" clearable>
+                    <el-option :label="this.$t('received')" :value="true"></el-option>
+                    <el-option :label="this.$t('notReceive')" :value="false"></el-option>
                   </el-select>
                 </el-form-item>
                 <!-- 狀態 🍖-->
-                <el-form-item label="通道類型" class="thirdPay_style me-2" prop="payMethodId">
-                  <el-select v-model="searchOption.payMethodId" placeholder="選擇狀態" @change="choose_tunnel(searchOption.payMethodId)" clearable>
-                    <el-option label="轉卡" value="7"></el-option>
+                <el-form-item :label="this.$t('channelType')" class="thirdPay_style me-2" prop="payMethodId">
+                  <el-select v-model="searchOption.payMethodId" :placeholder="this.$t('choose_status')" @change="choose_tunnel(searchOption.payMethodId)" clearable>
+                    <el-option :label="this.$t('VNBANK')" value="7"></el-option>
                     <el-option label="ZALO" value="8"></el-option>
                     <el-option label="MOMO" value="9"></el-option>
                     <el-option label="Viettel" value="12"></el-option>
-                    <el-option label="直連" value="10"></el-option>
-                    <el-option label="銀行掃碼" value="11"></el-option>
+                    <el-option :label="this.$t('vietnamDirect')" value="10"></el-option>
+                    <el-option :label="this.$t('bankScancode')" value="11"></el-option>
                   </el-select>
                 </el-form-item>
               </div>
@@ -63,19 +63,19 @@
             <el-col :span="24" class="add_left_style_1">
               <div class="d-flex">
                 <!-- 金額範圍min -->
-                <el-form-item label="金額範圍" class="thirdPay_style me-2" prop="amountMin">
-                  <el-input v-model="searchOption.amountMin" placeholder="最小金額" oninput="value=value.replace(/[^0-9.]/g,'')" clearable> </el-input>
+                <el-form-item :label="this.$t('AmountRange')" class="thirdPay_style me-2" prop="amountMin">
+                  <el-input v-model="searchOption.amountMin" :placeholder="this.$t('Lowest')" oninput="value=value.replace(/[^0-9.]/g,'')" clearable> </el-input>
                 </el-form-item>
                 <!-- 金額範圍max -->
                 <el-form-item label="~" class="thirdPay_style me-2" prop="amountMax">
-                  <el-input v-model="searchOption.amountMax" placeholder="最大金額" oninput="value=value.replace(/[^0-9.]/g,'')" clearable> </el-input>
+                  <el-input v-model="searchOption.amountMax" :placeholder="this.$t('Highest')" oninput="value=value.replace(/[^0-9.]/g,'')" clearable> </el-input>
                 </el-form-item>
               </div>
             </el-col>
           </el-row>
           <div class="text-center justify-content-between mt-3">
-            <el-button color="#faa30d" class="search_btn mt-1 px-5 fw-bold" size="default" @click.prevent="resetForm()">重置</el-button>
-            <el-button color="#faa30d" class="search_btn mt-1 px-5 fw-bold" size="default" @click="doSearch()">查詢</el-button>
+            <el-button color="#faa30d" class="search_btn mt-1 px-5 fw-bold" size="default" @click.prevent="resetForm()">{{ this.$t('reset') }}</el-button>
+            <el-button color="#faa30d" class="search_btn mt-1 px-5 fw-bold" size="default" @click="doSearch()">{{ this.$t('search') }}</el-button>
           </div>
         </el-form>
       </div>
@@ -89,73 +89,73 @@
           <div class="d-flex align-items-center justify-content-between">
             <div class="d-flex">
               <el-radio-group class="dateType_list" v-model="radio2" @change="searchDate(radio2)">
-                <el-radio-button label="今天" />
-                <el-radio-button label="近7天" />
-                <el-radio-button label="一個月" />
-                <el-radio-button label="三個月" />
+                <el-radio-button :label="this.$t('today')" />
+                <el-radio-button :label="this.$t('Last7Days')" />
+                <el-radio-button :label="this.$t('aMonth')" />
+                <el-radio-button :label="this.$t('Last3Months')" />
               </el-radio-group>
-              <el-date-picker class="ms-3" v-model="dateRange" type="daterange" range-separator="to" start-placeholder="起始日期" end-placeholder="結束日期" />
+              <el-date-picker class="ms-3" v-model="dateRange" type="daterange" range-separator="to" :start-placeholder="this.$t('startTime')" :end-placeholder="this.$t('endTime')" />
             </div>
-            <el-button color="#faa30d" class="search_btn px-5 fw-bold" size="default" @click="openExcelModal()">導出數據</el-button>
+            <el-button color="#faa30d" class="search_btn px-5 fw-bold" size="default" @click="openExcelModal()">{{ this.$t('exportData') }}</el-button>
           </div>
         </div>
 
         <!-- 查詢內容 -->
         <div class="order_table mt-3">
           <el-table id="excelTable" :data="orderTable" :header-cell-style="{ background: 'linear-gradient(180deg, rgba(252, 240, 255, 1) 0%, rgba(89, 160, 182, 0.597) 100%)', color: '#606266' }" v-loading="loading_table" element-loading-background="rgba(122, 122, 122, 0.1)">
-            <el-table-column prop="id" label="訂單ID" align="center" width="180">
+            <el-table-column prop="id" :label="this.$t('orderID')" align="center" width="180">
               <!-- <template v-slot="{ row }">{{ formatName(row.payGateCode) }}</template> -->
             </el-table-column>
-            <el-table-column prop="merchantName" label="商戶名稱" width="100" align="center">
+            <el-table-column prop="merchantName" :label="this.$t('merchantName')" width="100" align="center">
               <!-- <template v-slot="{ row }">{{ formatRate(row.rate) }}</template> -->
             </el-table-column>
-            <el-table-column prop="merchant_order_id" label="商戶訂單ID" width="180" align="center">
+            <el-table-column prop="merchant_order_id" :label="this.$t('merchantOrderID')" width="180" align="center">
               <!-- <template v-slot="{ row }">
                 <el-tag :type="row.isActive === 1 ? 'success' : 'danger'">
                   {{ formatgmtUsed(row.isActive) }}
                 </el-tag>
               </template> -->
             </el-table-column>
-            <el-table-column prop="pgType" label="通道類型" width="100" align="center">
+            <el-table-column prop="pgType" :label="this.$t('channelType')" width="150" align="center">
               <template v-slot="{ row }">
                 <img class="payTunnel_size" :src="row.pgType" :alt="row.momo_pay" @click="test(row)" @keydown="test(row)" />
               </template>
             </el-table-column>
-            <el-table-column prop="costFee" label="手續費" width="120" align="center" :formatter="stateFormat"> </el-table-column>
-            <el-table-column prop="amount" label="訂單金額" width="180" align="center" :formatter="stateFormat">
+            <el-table-column prop="costFee" :label="this.$t('Fee')" width="120" align="center" :formatter="stateFormat"> </el-table-column>
+            <el-table-column prop="amount" :label="this.$t('orderAmount_table')" width="180" align="center" :formatter="stateFormat">
               <!-- <template v-slot="{ row }">
                 <el-tag :type="row.isActive === 1 ? 'success' : 'danger'">
                   {{ formatgmtUsed(row.isActive) }}
                 </el-tag>
               </template> -->
             </el-table-column>
-            <el-table-column sortable prop="createdAt" label="創建時間" width="180" align="center">
+            <el-table-column sortable prop="createdAt" :label="this.$t('creatTime')" width="180" align="center">
               <!-- <template v-slot="{ row }">
                 <el-tag :type="row.isActive === 1 ? 'success' : 'danger'">
                   {{ formatgmtUsed(row.isActive) }}
                 </el-tag>
               </template> -->
             </el-table-column>
-            <el-table-column prop="isPaid" label="支付狀態" width="100" align="center">
+            <el-table-column prop="isPaid" :label="this.$t('paymentStatus')" width="200" align="center">
               <template v-slot="{ row }">
-                <el-tag :type="row.isPaid === 1 ? 'success' : 'danger'">
+                <el-tag effect="light" :type="row.isPaid === 1 ? 'success' : 'danger'">
                   {{ formatisPaid(row.isPaid) }}
                 </el-tag>
               </template>
             </el-table-column>
-            <el-table-column prop="isGotReceipt" label="通知狀態" width="100" align="center">
+            <el-table-column prop="isGotReceipt" :label="this.$t('notificationStatus')" width="200" align="center">
               <template v-slot="{ row }">
-                <el-tag :type="row.isGotReceipt === 1 ? 'success' : 'danger'">
+                <el-tag effect="light" :type="row.isGotReceipt === 1 ? 'success' : 'danger'">
                   {{ formatisGotReceipt(row.isGotReceipt) }}
                 </el-tag>
               </template>
             </el-table-column>
-            <el-table-column prop="billType" label="操作" align="center">
+            <el-table-column prop="billType" :label="this.$t('operating')" align="center">
               <template v-slot="{ row }">
                 <div class="setting_style d-flex align-items-center justify-content-center">
-                  <span @click="verifyRecharge(row)" @keydown="verifyRecharge(row)" class="me-3 pe-3" style="border-right: 2px solid">通知紀錄 </span>
-                  <span @click="openMerchant(row)" @keydown="openMerchant(row)" class="me-3 pe-3" style="border-right: 2px solid">商家地址</span>
-                  <span @click="doResendNotify(row)" @keydown="doResendNotify(row)">補發通知</span>
+                  <span @click="verifyRecharge(row)" @keydown="verifyRecharge(row)" class="me-3 pe-3" style="border-right: 2px solid">{{ this.$t('notificationHistory') }} </span>
+                  <span @click="openMerchant(row)" @keydown="openMerchant(row)" class="me-3 pe-3" style="border-right: 2px solid">{{ this.$t('merchantUrl') }}</span>
+                  <span @click="doResendNotify(row)" @keydown="doResendNotify(row)">{{ this.$t('resendNotification') }}</span>
                 </div>
               </template>
             </el-table-column>
@@ -165,53 +165,57 @@
             <el-pagination :page-sizes="[10, 30, 50, 100]" layout="sizes,prev, pager, next" :total="totalPage" class="pageStyle d-flex flex-row-reverse" v-model:page-size="pageSize" :current-page="currentPage" @current-change="handleCurrentChange" @size-change="sizeChange"> </el-pagination>
           </div>
           <!-- 通知紀錄彈窗 -->
-          <el-dialog v-model="centerDialogVisible" title="通知紀錄" width="60%" center>
+          <el-dialog v-model="centerDialogVisible" :title="this.$t('notificationHistory')" width="60%" center>
             <div class="notifyList_table">
               <el-table :data="notifyList_Data" stripe style="width: 100%" :header-cell-style="{ background: 'linear-gradient(180deg, rgba(252, 240, 255, 1) 0%, rgba(89, 160, 182, 0.95) 100%)', color: '#606266' }">
-                <el-table-column prop="isSuccess" label="通知結果" width="100" align="center">
+                <el-table-column prop="isSuccess" :label="this.$t('notificationResult')" width="100" align="center">
                   <template v-slot="{ row }">
                     <el-tag :type="row.isSuccess === 1 ? 'success' : 'danger'">
                       {{ formatisSuccess(row.isSuccess) }}
                     </el-tag>
                   </template>
                 </el-table-column>
-                <el-table-column prop="request" label="請求內容" width="240" align="center" />
-                <el-table-column prop="response" label="服務器返回" align="center" />
-                <el-table-column prop="createdAt" label="通知時間" align="center" />
+                <el-table-column prop="request" :label="this.$t('requestContent')" width="240" align="center" />
+                <el-table-column prop="response" :label="this.$t('serverResponse')" align="center" />
+                <el-table-column prop="createdAt" :label="this.$t('createdAt')" align="center" />
               </el-table>
             </div>
           </el-dialog>
           <!-- 商家地址彈窗 -->
-          <el-dialog class="merchant_title" v-model="merchantDialogVisible" title="商家地址" width="60%" center>
+          <el-dialog class="merchant_title" v-model="merchantDialogVisible" :title="this.$t('merchantUrl')" width="60%" center>
             <div class="d-flex flex-column">
-              <span class="mb-2 fs-4">通知地址 : {{ this.merchant_notify_url }} </span>
-              <span class="fs-4">返回地址 : {{ this.merchant_return_url }} </span>
+              <span class="mb-2 fs-4"
+                >{{ this.$t('notificationUrl') }} : <span class="text-deep-danger">{{ this.merchant_notify_url }}</span>
+              </span>
+              <span class="fs-4"
+                >{{ this.$t('returnUrl') }} : <span class="text-deep-danger">{{ this.merchant_return_url }}</span>
+              </span>
             </div>
           </el-dialog>
           <!-- EXCEL導出彈窗 -->
-          <el-dialog class="excelModel_style" v-model="excelDialogVisible" title="選擇導出範圍" width="20%" center>
+          <el-dialog class="excelModel_style" v-model="excelDialogVisible" :title="this.$t('choose_range')" width="20%" center>
             <div class="d-flex flex-column align-items-start">
-              <span class="mb-2 fs-5 text-deep2">日期範圍</span>
-              <el-date-picker class="mb-4" v-model="dateRange" type="daterange" range-separator="to" start-placeholder="起始日期" end-placeholder="結束日期" />
-              <span class="mb-2 fs-5">時間類型</span>
+              <span class="mb-2 fs-5 text-deep2">{{ this.$t('dateRange') }}</span>
+              <el-date-picker class="mb-4" v-model="dateRange" type="daterange" range-separator="to" :start-placeholder="this.$t('startTime')" :end-placeholder="this.$t('endTime')" />
+              <span class="mb-2 fs-5">{{ this.$t('timeType') }}</span>
               <el-radio-group class="mb-4" v-model="radio2" @change="searchDate(radio2)">
-                <el-radio-button label="創建時間" />
-                <el-radio-button label="支付時間" />
+                <el-radio-button :label="this.$t('creatTime')" />
+                <el-radio-button :label="this.$t('paymentTime')" />
               </el-radio-group>
 
-              <span class="mb-2 fs-5">語言</span>
+              <span class="mb-2 fs-5">{{ this.$t('language') }}</span>
               <el-radio-group class="mb-4" v-model="radio2" @change="searchDate(radio2)">
-                <el-radio-button label="中文" />
-                <el-radio-button label="英文" />
+                <el-radio-button :label="this.$t('Chinese')" />
+                <el-radio-button :label="this.$t('English')" />
               </el-radio-group>
 
-              <span class="mb-2 fs-5">快速導出</span>
+              <span class="mb-2 fs-5">{{ this.$t('quickExport') }}</span>
               <div class="d-flex align-self-center">
-                <el-button color="#faa30d" class="datePick_btn px-5 py-4 mt-4 fw-bold fs-6 align-self-center" size="small" @click="openExcelModal()">當日</el-button>
-                <el-button color="#faa30d" class="datePick_btn px-5 py-4 mt-4 fw-bold fs-6 align-self-center" size="small" @click="openExcelModal()">近三天</el-button>
-                <el-button color="#faa30d" class="datePick_btn px-5 py-4 mt-4 fw-bold fs-6 align-self-center" size="small" @click="openExcelModal()">近7天</el-button>
+                <el-button color="#faa30d" class="datePick_btn px-4 py-4 mt-4 fw-bold fs-6 align-self-center" size="small" @click="openExcelModal()">{{ this.$t('today') }}</el-button>
+                <el-button color="#faa30d" class="datePick_btn px-4 py-4 mt-4 fw-bold fs-6 align-self-center" size="small" @click="openExcelModal()">{{ this.$t('last3Days') }}</el-button>
+                <el-button color="#faa30d" class="datePick_btn px-4 py-4 mt-4 fw-bold fs-6 align-self-center" size="small" @click="openExcelModal()">{{ this.$t('last7Days') }}</el-button>
               </div>
-              <el-button color="#faa30d" class="export_btn p-4 mt-4 fw-bold fs-5 align-self-center" size="default" @click="openExcelModal()">確認導出</el-button>
+              <el-button color="#faa30d" class="export_btn p-4 mt-4 fw-bold fs-5 align-self-center" size="default" @click="openExcelModal()">{{ this.$t('confirm') }}</el-button>
             </div>
           </el-dialog>
         </div>
@@ -235,6 +239,8 @@ import ATM from '../assets/Logo/ATM.png';
 
 // 當前時間
 const nowTime = moment(new Date()).utc().format();
+// 最近7天
+const oneTime = moment(new Date()).utc().subtract(1, 'days').format();
 // 最近7天
 const sevenTime = moment(new Date()).utc().subtract(7, 'days').format();
 // 最近1個月
@@ -262,7 +268,7 @@ export default {
         amountMin: null,
         find: false,
       },
-      radio2: '今天', // 時間區間
+      radio2: this.$t('today'), // 時間區間
       total: '', // 總金額
       totalFee: '', // 總手續費
       dateRange: '',
@@ -306,21 +312,73 @@ export default {
   methods: {
     // 過濾支付狀態
     formatisPaid(isPaid) {
-      if (isPaid === 1) {
-        return '已支付';
+      if (this.$i18n.locale === 'tw') {
+        if (isPaid === 1) {
+          return '已支付';
+        }
+        if (isPaid === 0) {
+          return '未支付';
+        }
       }
-      if (isPaid === 0) {
-        return '未支付';
+      if (this.$i18n.locale === 'en') {
+        if (isPaid === 1) {
+          return 'Paid';
+        }
+        if (isPaid === 0) {
+          return 'UnPaid';
+        }
+      }
+      if (this.$i18n.locale === 'cn') {
+        if (isPaid === 1) {
+          return '已支付';
+        }
+        if (isPaid === 0) {
+          return '未支付';
+        }
+      }
+      if (this.$i18n.locale === 'vn') {
+        if (isPaid === 1) {
+          return 'Trả';
+        }
+        if (isPaid === 0) {
+          return 'Chưa thanh toán';
+        }
       }
       return '備用';
     },
     // 過濾回執狀態
     formatisGotReceipt(isGotReceipt) {
-      if (isGotReceipt === 1) {
-        return '已收到回執';
+      if (this.$i18n.locale === 'tw') {
+        if (isGotReceipt === 1) {
+          return '已收到回執';
+        }
+        if (isGotReceipt === 0) {
+          return '暫無回執';
+        }
       }
-      if (isGotReceipt === 0) {
-        return '暫無回執';
+      if (this.$i18n.locale === 'en') {
+        if (isGotReceipt === 1) {
+          return 'Receipt received';
+        }
+        if (isGotReceipt === 0) {
+          return 'No Receipt';
+        }
+      }
+      if (this.$i18n.locale === 'cn') {
+        if (isGotReceipt === 1) {
+          return '已收到回执';
+        }
+        if (isGotReceipt === 0) {
+          return '暂无回执';
+        }
+      }
+      if (this.$i18n.locale === 'vn') {
+        if (isGotReceipt === 1) {
+          return 'biên lai nhận được';
+        }
+        if (isGotReceipt === 0) {
+          return 'notReceive';
+        }
       }
       return '備用';
     },
@@ -435,21 +493,21 @@ export default {
       console.log(nowTime);
       console.log(label);
       this.dateRange = '';
-      if (label === '今天') {
-        this.searchOption.startAt = nowTime;
+      if (label === this.$t('today')) {
+        this.searchOption.startAt = oneTime;
         this.searchOption.endAt = nowTime;
       }
-      if (label === '近7天') {
+      if (label === this.$t('Last7Days')) {
         console.log(sevenTime);
         this.searchOption.startAt = sevenTime;
         this.searchOption.endAt = nowTime;
       }
-      if (label === '一個月') {
+      if (label === this.$t('aMonth')) {
         console.log(monthTime);
         this.searchOption.startAt = monthTime;
         this.searchOption.endAt = nowTime;
       }
-      if (label === '三個月') {
+      if (label === this.$t('Last3Months')) {
         console.log(threeMonthTime);
         this.searchOption.startAt = threeMonthTime;
         this.searchOption.endAt = nowTime;
@@ -475,15 +533,15 @@ export default {
       console.log(this.radio2);
       // 預設搜尋當日訂單
       if (this.dateRange === '') {
-        if (this.radio2 === '今天') {
-          this.searchOption.startAt = nowTime;
+        if (this.radio2 === this.$t('today')) {
+          this.searchOption.startAt = oneTime;
           console.log('抓今天');
           this.searchOption.endAt = nowTime;
-        } else if (this.radio2 === '近7天') {
+        } else if (this.radio2 === this.$t('Last7Days')) {
           console.log('抓7天');
           this.searchOption.startAt = sevenTime;
           this.searchOption.endAt = nowTime;
-        } else if (this.radio2 === '一個月') {
+        } else if (this.radio2 === this.$t('aMonth')) {
           console.log('抓一個月');
           this.searchOption.startAt = monthTime;
           this.searchOption.endAt = nowTime;
@@ -685,7 +743,9 @@ export default {
       console.log(row.pgType);
     },
   },
-  created() {},
+  created() {
+    this.searchDate();
+  },
 };
 </script>
 

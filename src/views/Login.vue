@@ -3,20 +3,20 @@
     <!-- 表單資料 🥞-->
     <el-form ref="addBank_Form" :model="addForm_Data" :rules="rules" class="demo-ruleForm d-flex flex-column align-items-center justify-content-center">
       <img :src="logoSrc" alt="#" style="width: 200px; height: 200px; border-radius: 50%" />
-      <p class="mt-5 text-white fs-2">歡迎回來 !</p>
+      <p class="mt-5 text-white fs-2">{{this.$t('welcomeBack')}} !</p>
       <!-- 帳號 -->
-      <el-form-item label="帳號" prop="phone" class="addInput_style">
-        <el-input class="contentName_style" v-model="addForm_Data.phone" placeholder="請輸入"></el-input>
+      <el-form-item :label="this.$t('account')" prop="phone" class="addInput_style">
+        <el-input class="contentName_style" v-model="addForm_Data.phone" :placeholder="this.$t('account')"></el-input>
       </el-form-item>
       <!-- 密碼 -->
-      <el-form-item label="密碼" prop="password" class="addInput_style">
-        <el-input class="contentName_style" v-model="addForm_Data.password" placeholder="請輸入" type="password"></el-input>
+      <el-form-item :label="this.$t('password')" prop="password" class="addInput_style">
+        <el-input class="contentName_style" v-model="addForm_Data.password" :placeholder="this.$t('password')" type="password"></el-input>
         <!-- <i class="fa-regular fa-copy text-yellow" @click="copy()" @keydown="copy()"></i> -->
       </el-form-item>
       <!-- 驗證碼 -->
       <div class="d-flex align-items-center">
-        <el-form-item label="驗證碼" prop="captcha" class="captchaInput_style">
-          <el-input class="contentName_style" v-model="addForm_Data.captcha" placeholder="請輸入"></el-input>
+        <el-form-item :label="this.$t('captcha')" prop="captcha" class="captchaInput_style">
+          <el-input class="contentName_style" v-model="addForm_Data.captcha" :placeholder="this.$t('captcha')"></el-input>
           <!-- <i class="fa-regular fa-copy text-yellow" @click="copy()" @keydown="copy()"></i> -->
         </el-form-item>
         <div @click="reload_Captcha()" @keydown="reload_Captcha()">
@@ -24,8 +24,8 @@
         </div>
       </div>
       <!-- google驗證碼 -->
-      <el-form-item v-if="isGoogleLogin === true" label="Google驗證碼" prop="googleVerifyCode" class="addInput_style">
-        <el-input class="contentName_style" v-model="addForm_Data.googleVerifyCode" placeholder="請輸入" type="password"></el-input>
+      <el-form-item v-if="isGoogleLogin === true" :label="this.$t('googleCode')" prop="googleVerifyCode" class="addInput_style">
+        <el-input class="contentName_style" v-model="addForm_Data.googleVerifyCode" :placeholder="this.$t('googleCode')" type="password"></el-input>
       </el-form-item>
 
       <a v-if="isGoogleLogin === null" href="#" class="px-5" @click.prevent="login()">
@@ -33,21 +33,21 @@
         <span></span>
         <span></span>
         <span></span>
-        登入
+        {{this.$t('login')}}
       </a>
       <a v-if="isGoogleLogin === false" href="#" class="px-5" @click.prevent="login()">
         <span></span>
         <span></span>
         <span></span>
         <span></span>
-        登入
+        {{this.$t('login')}}
       </a>
       <a v-if="isGoogleLogin === true" href="#" class="px-5" @click.prevent="login_withGoogle()">
         <span></span>
         <span></span>
         <span></span>
         <span></span>
-        登入
+        {{this.$t('login')}}
       </a>
     </el-form>
   </div>
@@ -91,7 +91,7 @@ export default {
           //   },
           {
             required: true,
-            message: '請輸入帳號',
+            message: this.$t('plsTypeAccount'),
             trigger: 'blur',
           },
         ],
@@ -99,7 +99,7 @@ export default {
         password: [
           {
             required: true,
-            message: '請輸入密碼',
+            message: this.$t('plsTypePwd'),
             trigger: 'blur',
           },
         ],
@@ -107,7 +107,7 @@ export default {
         captcha: [
           {
             required: true,
-            message: '請輸入驗證碼',
+            message: this.$t('plsTypeCaptcha'),
             trigger: 'blur',
           },
         ],
@@ -144,64 +144,64 @@ export default {
         if (this.isGoogleLogin === false) {
           if (res.data.code === 200) {
             console.log(res.data.msg);
-            this.$swal.fire('登入成功!', '登入成功', 'success');
+            this.$swal.fire(`${this.$t('loginSuccess')}!`, this.$t('loginSuccess'), 'success');
             // localStorage.setItem('user', this.addForm_Data);
             this.$router.push('/');
           } else if (res.data.code === 422) {
             this.wrongMsg.phone = _.findKey(loginMsg, ['param', 'phone']);
             console.log(this.wrongMsg.phone);
             if (this.wrongMsg.phone !== undefined) {
-              this.$swal.fire('登入失敗!', `${res.data.msg.phone.msg}`, 'error');
+              this.$swal.fire(`${this.$t('loginFail')}!`, `${res.data.msg.phone.msg}`, 'error');
             }
             this.wrongMsg.password = _.findKey(loginMsg, ['param', 'password']);
             console.log(this.wrongMsg.password);
             if (this.wrongMsg.password !== undefined) {
-              this.$swal.fire('登入失敗!', `${res.data.msg.password.msg}`, 'error');
+              this.$swal.fire(`${this.$t('loginFail')}!`, `${res.data.msg.password.msg}`, 'error');
             }
             this.wrongMsg.captcha = _.findKey(loginMsg, ['param', 'captcha']);
             console.log(this.wrongMsg.captcha);
             if (this.wrongMsg.captcha !== undefined) {
-              this.$swal.fire('登入失敗!', `${res.data.msg.captcha.msg}`, 'error');
+              this.$swal.fire(`${this.$t('loginFail')}!`, `${res.data.msg.captcha.msg}`, 'error');
             } else if (res.data.code === 500) {
               console.log(res.data.msg);
-              this.$swal.fire('登入失敗!', `${res.data.msg}`, 'error');
+              this.$swal.fire(`${this.$t('loginFail')}!`, `${res.data.msg}`, 'error');
             }
             this.reload_Captcha();
           } else {
             console.log(res.data.msg);
-            this.$swal.fire('登入失敗!', `${res.data.msg}`, 'error');
+            this.$swal.fire(`${this.$t('loginFail')}!`, `${res.data.msg}`, 'error');
             this.reload_Captcha();
           }
         }
         if (this.isGoogleLogin === null) {
           if (res.data.code === 200) {
             console.log(res.data.msg);
-            this.$swal.fire('登入成功!', '登入成功', 'success');
+            this.$swal.fire(`${this.$t('loginSuccess')}!`, this.$t('loginSuccess'), 'success');
             // localStorage.setItem('user', this.addForm_Data);
             this.$router.push('/');
           } else if (res.data.code === 422) {
             this.wrongMsg.phone = _.findKey(loginMsg, ['param', 'phone']);
             console.log(this.wrongMsg.phone);
             if (this.wrongMsg.phone !== undefined) {
-              this.$swal.fire('登入失敗!', `${res.data.msg.phone.msg}`, 'error');
+              this.$swal.fire(`${this.$t('loginFail')}!`, `${res.data.msg.phone.msg}`, 'error');
             }
             this.wrongMsg.password = _.findKey(loginMsg, ['param', 'password']);
             console.log(this.wrongMsg.password);
             if (this.wrongMsg.password !== undefined) {
-              this.$swal.fire('登入失敗!', `${res.data.msg.password.msg}`, 'error');
+              this.$swal.fire(`${this.$t('loginFail')}!`, `${res.data.msg.password.msg}`, 'error');
             }
             this.wrongMsg.captcha = _.findKey(loginMsg, ['param', 'captcha']);
             console.log(this.wrongMsg.captcha);
             if (this.wrongMsg.captcha !== undefined) {
-              this.$swal.fire('登入失敗!', `${res.data.msg.captcha.msg}`, 'error');
+              this.$swal.fire(`${this.$t('loginFail')}!`, `${res.data.msg.captcha.msg}`, 'error');
             } else if (res.data.code === 500) {
               console.log(res.data.msg);
-              this.$swal.fire('登入失敗!', `${res.data.msg}`, 'error');
+              this.$swal.fire(`${this.$t('loginFail')}!`, `${res.data.msg}`, 'error');
             }
             this.reload_Captcha();
           } else {
             console.log(res.data.msg);
-            this.$swal.fire('登入失敗!', `${res.data.msg}`, 'error');
+            this.$swal.fire(`${this.$t('loginFail')}!`, `${res.data.msg}`, 'error');
             this.reload_Captcha();
           }
         } else {

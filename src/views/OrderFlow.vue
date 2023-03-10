@@ -5,20 +5,20 @@
       <div class="card_outStyle radius-10 p-3 pb-4">
         <!-- 標題 -->
         <div class="d-flex align-items-center justify-content-between mx-4">
-          <h4 class="text-white d-flex flex-start my-4">篩選</h4>
+          <h4 class="text-white d-flex flex-start my-4">{{ this.$t('filter') }}</h4>
         </div>
         <div class="d-flex justify-content-between">
           <!-- 交易類型 -->
           <div class="d-flex align-items-center mx-4">
-            <span class="text-light2 me-3">交易類型:</span>
+            <span class="text-light2 me-3">{{ this.$t('transactionType') }} :</span>
             <el-radio-group class="orderType_list" v-model="orderType" @change="searchDate(orderType)">
-              <el-radio-button label="訂單" />
-              <el-radio-button label="內充" />
-              <el-radio-button label="結算" />
+              <el-radio-button :label="this.$t('order')" />
+              <el-radio-button :label="this.$t('InternalTopup')" />
+              <el-radio-button :label="this.$t('settle')" />
             </el-radio-group>
           </div>
           <!-- 導出數據 -->
-          <el-button color="#faa30d" class="search_btn px-5 fw-bold me-5" size="default" @click="openExcelModal()">導出數據</el-button>
+          <el-button color="#faa30d" class="search_btn px-5 fw-bold me-5" size="default" @click="openExcelModal()">{{ this.$t('exportData') }}</el-button>
         </div>
       </div>
     </div>
@@ -28,13 +28,14 @@
     <div class="col-12">
       <div class="card_outStyle radius-10 p-4">
         <!-- 標題 -->
-        <div class="d-flex align-items-center justify-content-between mx-4">
-          <h4 class="text-white d-flex flex-start my-4">商戶明細</h4>
+        <div class="d-flex align-items-center justify-content-between mx-3">
+          <h4 class="text-white d-flex flex-start my-4">{{ this.$t('merchantDetail') }}</h4>
         </div>
 
         <!-- 查詢內容 -->
         <div class="merchant_table mt-3">
           <el-table
+            class="ms-2"
             id="excelTable"
             :data="orderTable"
             :header-cell-style="{ background: 'linear-gradient(180deg, rgba(252, 240, 255, 1) 0%, rgba(89, 160, 182, 0.597) 100%)', color: '#606266' }"
@@ -48,54 +49,56 @@
             v-loading="loading_table"
             element-loading-background="rgba(122, 122, 122, 0.1)"
           >
-            <el-table-column label="展開" type="expand" align="center" width="80">
+            <!-- 展開 -->
+            <el-table-column :label="this.$t('expand')" type="expand" align="center" width="80">
               <template #default="props">
                 <!-- 訂單類型 -->
                 <div v-if="searchOption.type === 'order'" class="d-flex py-3 expand_borderStyle" style="margin-left: 130px" v-loading="loading" element-loading-background="rgba(122, 122, 122, 0.0)">
                   <div class="me-4" style="margin-left: 50px">
-                    <p @click="test(props)" @keydown="test(props)">商戶訂單ID : {{ props.row.merchant_order_id }}</p>
-                    <p class="mt-2">訂單ID : {{ props.row.targetId }}</p>
+                    <p @click="test(props)" @keydown="test(props)">{{ this.$t('merchantOrderID') }} : {{ props.row.merchant_order_id }}</p>
+                    <p class="mt-2">{{ this.$t('orderID') }} : {{ props.row.targetId }}</p>
                     <!-- <p class="mt-2">訂單ID : {{ props.$index }}</p> -->
                   </div>
                   <div class="me-4" style="margin-left: 120px">
                     <p>
-                      手續費 : <span class="text-deep-danger fw-bold">{{ props.row.costFee }}</span>
+                      {{ this.$t('Fee') }} : <span class="text-deep-danger fw-bold">{{ props.row.costFee }}</span>
                     </p>
                     <p class="mt-2">
-                      訂單金額 : <span class="text-deep-danger fw-bold">{{ props.row.allAmount }}</span>
+                      {{ this.$t('orderAmount_table') }} : <span class="text-deep-danger fw-bold">{{ props.row.allAmount }}</span>
                     </p>
                   </div>
                   <div class="me-4" style="margin-left: 120px">
-                    <p>創建時間 : {{ props.row.createdAt }}</p>
-                    <p class="mt-2">支付時間 : {{ props.row.paidAt }}</p>
+                    <p>{{ this.$t('creatTime') }} : {{ props.row.createdAt }}</p>
+                    <p class="mt-2">{{ this.$t('paymentTime') }} : {{ props.row.paidAt }}</p>
                   </div>
                   <div style="margin-left: 120px">
                     <p>
-                      支付狀態 :
-                      <el-tag :type="props.row.isPaid === 1 ? 'success' : 'danger'"> {{ formatisPaid(props.row.isPaid) }} </el-tag>
+                      {{ this.$t('paymentStatus') }} :
+                      <el-tag effect="dark" :type="props.row.isPaid === 1 ? 'success' : 'danger'"> {{ formatisPaid(props.row.isPaid) }} </el-tag>
                     </p>
+                    <!-- 回條通知 -->
                     <p class="mt-2">
-                      通知狀態 : <el-tag :type="props.row.isGotReceipt === 1 ? 'success' : 'danger'"> {{ formatisGotReceipt(props.row.isGotReceipt) }} </el-tag>
+                      {{ this.$t('notificationStatus') }} : <el-tag effect="dark" :type="props.row.isGotReceipt === 1 ? 'success' : 'danger'"> {{ formatisGotReceipt(props.row.isGotReceipt) }} </el-tag>
                     </p>
                   </div>
                 </div>
                 <!-- 內充類型 -->
                 <div v-if="searchOption.type === 'interCharge'" class="d-flex py-3 expand_borderStyle" style="margin-left: 130px" v-loading="loading" element-loading-background="rgba(122, 122, 122, 0.0)">
                   <div class="me-4" style="margin-left: 50px">
-                    <p class="mt-2">訂單ID : {{ props.row.targetId }}</p>
+                    <p class="mt-2">{{ this.$t('orderID') }} : {{ props.row.targetId }}</p>
                     <!-- <p class="mt-2">訂單ID : {{ props.$index }}</p> -->
                   </div>
                   <div class="me-4" style="margin-left: 120px">
                     <p>
-                      手續費 : <span class="text-deep-danger fw-bold">{{ props.row.fee }}</span>
+                      {{ this.$t('Fee') }} : <span class="text-deep-danger fw-bold">{{ props.row.fee }}</span>
                     </p>
                     <p class="mt-2">
-                      金額 : <span class="text-deep-danger fw-bold">{{ props.row.innerAmount }}</span>
+                      {{ this.$t('amount') }} : <span class="text-deep-danger fw-bold">{{ props.row.innerAmount }}</span>
                     </p>
                   </div>
                   <div class="me-4" style="margin-left: 120px">
-                    <p>內充時間 : {{ props.row.createdAt }}</p>
-                    <p class="mt-2">內充備註 : {{ props.row.memo }}</p>
+                    <p>{{ this.$t('InternalTopup_time') }} : {{ props.row.createdAt }}</p>
+                    <p class="mt-2">{{ this.$t('InternalTopup_memo') }} : {{ props.row.memo }}</p>
                   </div>
                 </div>
                 <!-- 結算類型 -->
@@ -103,13 +106,13 @@
                   <div class="me-4" style="margin-left: 50px">
                     <!-- <p @click="test(props)" @keydown="test(props)">商戶收款信 : {{ props.row.bankOwner }}</p> -->
                     <p @click="test(props)" @keydown="test(props)">
-                      商戶收款信 :
+                      {{ this.$t('merchantInfo') }} :
                       <el-popover effect="light" trigger="hover" placement="top" width="auto">
                         <template #default>
-                          <div>持卡人: {{ props.row.bankOwner }}</div>
-                          <div>銀行名稱: {{ props.row.bankName }}</div>
-                          <div>支行名稱: {{ props.row.bankSubName }}</div>
-                          <div>銀行卡號: {{ props.row.bankAccount }}</div>
+                          <div>{{ this.$t('bankOwner') }} : {{ props.row.bankOwner }}</div>
+                          <div>{{ this.$t('bankName') }} : {{ props.row.bankName }}</div>
+                          <div>{{ this.$t('branchBank') }} : {{ props.row.bankSubName }}</div>
+                          <div>{{ this.$t('bankAccount') }} : {{ props.row.bankAccount }}</div>
                         </template>
                         <template #reference>
                           <el-tag>{{ props.row.bankOwner }}</el-tag>
@@ -117,14 +120,14 @@
                       </el-popover>
                     </p>
                     <p class="mt-2">
-                      平台出款信息 :
+                      {{ this.$t('platformPaymentInfo') }} :
                       <el-tag v-if="props.row.isDone === 0" effect="dark" type="danger"> {{ formatbillType(props.row.isDone) }} </el-tag>
                       <el-popover v-if="props.row.isDone === 1" effect="light" trigger="hover" placement="top" width="auto">
                         <template #default>
-                          <div>持卡人: {{ props.row.mainCardBankOwner }}</div>
-                          <div>銀行名稱: {{ props.row.mainCardBankName }}</div>
-                          <div>支行名稱: {{ props.row.mainCardBankSubName }}</div>
-                          <div>銀行卡號: {{ props.row.mainCardBankAccount }}</div>
+                          <div>{{ this.$t('bankOwner') }} : {{ props.row.mainCardBankOwner }}</div>
+                          <div>{{ this.$t('bankName') }} : {{ props.row.mainCardBankName }}</div>
+                          <div>{{ this.$t('branchBank') }} : {{ props.row.mainCardBankSubName }}</div>
+                          <div>{{ this.$t('bankAccount') }} : {{ props.row.mainCardBankAccount }}</div>
                         </template>
                         <template #reference>
                           <el-tag effect="dark" type="success">{{ props.row.bankOwner }}</el-tag>
@@ -135,25 +138,25 @@
                   </div>
                   <div class="me-4" style="margin-left: 120px">
                     <p>
-                      結算金額 : <span class="text-deep-danger fw-bold">{{ props.row.billAmount }}</span>
+                      {{ this.$t('settlement_amount') }} : <span class="text-deep-danger fw-bold">{{ props.row.billAmount }}</span>
                     </p>
                     <p class="mt-2">
-                      手續費 : <span class="text-deep-danger fw-bold">{{ props.row.bankfee }}</span>
+                      {{ this.$t('Fee') }} : <span class="text-deep-danger fw-bold">{{ props.row.bankfee }}</span>
                     </p>
                     <p class="mt-2">
-                      實結金額 : <span class="text-deep-danger fw-bold">{{ props.row.totalAmount }}</span>
+                      {{ this.$t('actualAmount') }} : <span class="text-deep-danger fw-bold">{{ props.row.totalAmount }}</span>
                     </p>
                   </div>
                   <div class="me-4" style="margin-left: 120px">
                     <p>
-                      結算類型 : <el-tag type="warning" effect="dark">{{ props.row.billType }}</el-tag>
+                      {{ this.$t('settleType') }} : <el-tag type="warning" effect="dark">{{ props.row.billType }}</el-tag>
                     </p>
-                    <p class="mt-2">支付時間 : {{ props.row.paidAt }}</p>
+                    <p class="mt-2">{{ this.$t('paymentTime') }} : {{ props.row.paidAt }}</p>
                   </div>
                   <div style="margin-left: 120px">
                     <p>
-                      結算狀態 :
-                      <el-tag :type="props.row.isDone === 1 ? 'success' : 'danger'"> {{ formatbillType(props.row.isDone) }} </el-tag>
+                      {{ this.$t('settlementStatus') }} :
+                      <el-tag effect="dark" :type="props.row.isDone === 1 ? 'success' : 'danger'"> {{ formatbillType(props.row.isDone) }} </el-tag>
                     </p>
                   </div>
                 </div>
@@ -163,33 +166,38 @@
                 </el-table> -->
               </template>
             </el-table-column>
-            <el-table-column prop="merchantName" label="商戶名稱" width="260" align="center">
+            <!-- 商戶名稱 -->
+            <el-table-column prop="merchantName" :label="this.$t('merchantName')" width="260" align="center">
               <!-- <template v-slot="{ row }">{{ formatRate(row.rate) }}</template> -->
             </el-table-column>
-            <el-table-column prop="amount" label="交易金額" align="center" :formatter="stateFormat" sortable width="260">
+            <!-- 交易金額 -->
+            <el-table-column prop="amount" :label="this.$t('transactionAmount')" align="center" :formatter="stateFormat" sortable width="260">
               <template v-slot="{ row }">
                 <div class="me-2">
                   <div>
                     <span class="me-1 text-deep-danger fw-bold fs-6">{{ row.amount }}</span>
-                    <span>元</span>
+                    <span>{{ this.$t('unit') }}</span>
                     <span v-if="searchOption.type === 'interCharge'" class="ms-3" @click="test(row)" @keydown="test(row)"
-                      >手續費 : <span class="text-deep-danger fw-bold" style="font-size: 14px">{{ row.innerFee }}</span></span
+                      >{{ this.$t('Fee') }} : <span class="text-deep-danger fw-bold" style="font-size: 14px">{{ row.innerFee }}</span></span
                     >
-                    <span v-if="searchOption.type === 'interCharge'">元</span>
+                    <span v-if="searchOption.type === 'interCharge'">{{ this.$t('unit') }}</span>
                   </div>
                 </div>
               </template>
             </el-table-column>
-            <el-table-column prop="createdAt" label="創建時間" align="center" sortable> </el-table-column>
-            <el-table-column prop="balance" label="商戶當前餘額" align="center" :formatter="stateFormat" sortable>
+            <!-- 創建時間 -->
+            <el-table-column prop="createdAt" :label="this.$t('creatTime')" align="center" sortable> </el-table-column>
+            <!-- 商戶當前餘額 -->
+            <el-table-column prop="balance" :label="this.$t('merchantBalance')" align="center" :formatter="stateFormat" sortable>
               <template v-slot="{ row }">
                 <div class="me-2">
                   <span class="me-1 text-deep-danger fw-bold fs-6">{{ row.balance }}</span>
-                  <span>元</span>
+                  <span>{{ this.$t('unit') }}</span>
                 </div>
               </template>
             </el-table-column>
-            <el-table-column prop="type" label="交易類型" align="center">
+            <!-- 交易類型 -->
+            <el-table-column prop="type" :label="this.$t('transactionType')" align="center">
               <template v-slot="{ row }">
                 <div v-if="searchOption.type === 'order'">
                   <span><i class="fa-solid fa-bag-shopping fs-5 me-2"></i>{{ formatPaidStatus(row.type) }}</span>
@@ -208,29 +216,29 @@
             <el-pagination :page-sizes="[10, 30, 50, 100]" layout="sizes,prev, pager, next" :total="totalPage" class="pageStyle d-flex flex-row-reverse" v-model:page-size="pageSize" :current-page="currentPage" @current-change="handleCurrentChange" @size-change="sizeChange"> </el-pagination>
           </div>
           <!-- EXCEL導出彈窗 -->
-          <el-dialog class="excelModel_style" v-model="excelDialogVisible" title="選擇導出範圍" width="20%" center>
+          <el-dialog class="excelModel_style" v-model="excelDialogVisible" :title="this.$t('choose_range')" width="20%" center>
             <div class="d-flex flex-column align-items-start">
-              <span class="mb-2 fs-5 text-deep2">日期範圍</span>
-              <el-date-picker class="mb-4" v-model="dateRange" type="daterange" range-separator="to" start-placeholder="起始日期" end-placeholder="結束日期" />
-              <span class="mb-2 fs-5">時間類型</span>
+              <span class="mb-2 fs-5 text-deep2">{{ this.$t('dateRange') }}</span>
+              <el-date-picker class="mb-4" v-model="dateRange" type="daterange" range-separator="to" :start-placeholder="this.$t('startTime')" :end-placeholder="this.$t('endTime')" />
+              <span class="mb-2 fs-5">{{ this.$t('timeType') }}</span>
               <el-radio-group class="mb-4" v-model="radio2" @change="searchDate(radio2)">
-                <el-radio-button label="創建時間" />
-                <el-radio-button label="支付時間" />
+                <el-radio-button :label="this.$t('creatTime')" />
+                <el-radio-button :label="this.$t('paymentTime')" />
               </el-radio-group>
 
-              <span class="mb-2 fs-5">語言</span>
+              <span class="mb-2 fs-5">{{ this.$t('language') }}</span>
               <el-radio-group class="mb-4" v-model="radio2" @change="searchDate(radio2)">
-                <el-radio-button label="中文" />
-                <el-radio-button label="英文" />
+                <el-radio-button :label="this.$t('Chinese')" />
+                <el-radio-button :label="this.$t('English')" />
               </el-radio-group>
 
-              <span class="mb-2 fs-5">快速導出</span>
+              <span class="mb-2 fs-5">{{ this.$t('quickExport') }}</span>
               <div class="d-flex align-self-center">
-                <el-button color="#faa30d" class="datePick_btn py-4 px-5 mt-4 fw-bold fs-6 align-self-center" size="small" @click="openExcelModal()">當日</el-button>
-                <el-button color="#faa30d" class="datePick_btn py-4 px-5 mt-4 fw-bold fs-6 align-self-center" size="small" @click="openExcelModal()">近三天</el-button>
-                <el-button color="#faa30d" class="datePick_btn py-4 px-5 mt-4 fw-bold fs-6 align-self-center" size="small" @click="openExcelModal()">近7天</el-button>
+                <el-button color="#faa30d" class="datePick_btn px-4 py-4 mt-4 fw-bold fs-6 align-self-center" size="small" @click="openExcelModal()">{{ this.$t('today') }}</el-button>
+                <el-button color="#faa30d" class="datePick_btn px-4 py-4 mt-4 fw-bold fs-6 align-self-center" size="small" @click="openExcelModal()">{{ this.$t('last3Days') }}</el-button>
+                <el-button color="#faa30d" class="datePick_btn px-4 py-4 mt-4 fw-bold fs-6 align-self-center" size="small" @click="openExcelModal()">{{ this.$t('last7Days') }}</el-button>
               </div>
-              <el-button color="#faa30d" class="export_btn p-4 mt-4 fw-bold fs-5 align-self-center" size="default" @click="openExcelModal()">確認導出</el-button>
+              <el-button color="#faa30d" class="export_btn p-4 mt-4 fw-bold fs-5 align-self-center" size="default" @click="openExcelModal()">{{ this.$t('confirm') }}</el-button>
             </div>
           </el-dialog>
         </div>
@@ -308,7 +316,7 @@ export default {
       },
 
       // 交易類型
-      orderType: '訂單',
+      orderType: this.$t('order'),
 
       // 下方訂單Table
       orderTable: [],
@@ -339,40 +347,118 @@ export default {
     // 過濾交易類型
     formatPaidStatus(type) {
       if (type === 'order') {
-        return '訂單';
+        return this.$t('order');
       }
       if (type === 'interCharge') {
-        return '內充';
+        return this.$t('InternalTopup');
       }
-      return '結算';
+      return this.$t('settle');
     },
     // 過濾回執狀態
     formatisGotReceipt(isGotReceipt) {
-      if (isGotReceipt === 1) {
-        return '已收到回執';
+      if (this.$i18n.locale === 'tw') {
+        if (isGotReceipt === 1) {
+          return '已收到回執';
+        }
+        if (isGotReceipt === 0) {
+          return '暫無回執';
+        }
       }
-      if (isGotReceipt === 0) {
-        return '暫無回執';
+      if (this.$i18n.locale === 'cn') {
+        if (isGotReceipt === 1) {
+          return '已收到回执';
+        }
+        if (isGotReceipt === 0) {
+          return '暂无回执';
+        }
+      }
+      if (this.$i18n.locale === 'en') {
+        if (isGotReceipt === 1) {
+          return 'Received';
+        }
+        if (isGotReceipt === 0) {
+          return 'Not received';
+        }
+      }
+      if (this.$i18n.locale === 'vn') {
+        if (isGotReceipt === 1) {
+          return 'biên lai nhận được';
+        }
+        if (isGotReceipt === 0) {
+          return 'không nhận';
+        }
       }
       return '備用';
     },
     // 過濾支付狀態
     formatisPaid(isPaid) {
-      if (isPaid === 1) {
-        return '已支付';
+      if (this.$i18n.locale === 'tw') {
+        if (isPaid === 1) {
+          return '已支付';
+        }
+        if (isPaid === 0) {
+          return '未支付';
+        }
       }
-      if (isPaid === 0) {
-        return '未支付';
+      if (this.$i18n.locale === 'cn') {
+        if (isPaid === 1) {
+          return '已支付';
+        }
+        if (isPaid === 0) {
+          return '未支付';
+        }
+      }
+      if (this.$i18n.locale === 'en') {
+        if (isPaid === 1) {
+          return 'Paid';
+        }
+        if (isPaid === 0) {
+          return 'UnPaid';
+        }
+      }
+      if (this.$i18n.locale === 'vn') {
+        if (isPaid === 1) {
+          return 'Trả';
+        }
+        if (isPaid === 0) {
+          return 'Chưa thanh toán';
+        }
       }
       return '備用';
     },
     // 過濾結算類型
     formatbillType(isDone) {
-      if (isDone === 1) {
-        return '已結算';
+      if (this.$i18n.locale === 'tw') {
+        if (isDone === 1) {
+          return '已結算';
+        }
+        if (isDone === 0) {
+          return '未結算';
+        }
       }
-      if (isDone === 0) {
-        return '未結算';
+      if (this.$i18n.locale === 'cn') {
+        if (isDone === 1) {
+          return '已結算';
+        }
+        if (isDone === 0) {
+          return '未結算';
+        }
+      }
+      if (this.$i18n.locale === 'en') {
+        if (isDone === 1) {
+          return 'Settled';
+        }
+        if (isDone === 0) {
+          return 'Not Settled';
+        }
+      }
+      if (this.$i18n.locale === 'vn') {
+        if (isDone === 1) {
+          return 'Định cư';
+        }
+        if (isDone === 0) {
+          return 'bất ổn';
+        }
       }
       return '備用';
     },
@@ -380,13 +466,13 @@ export default {
     searchDate(label) {
       console.log(nowTime);
       console.log(label);
-      if (label === '訂單') {
+      if (label === this.$t('order')) {
         this.searchOption.type = 'order';
       }
-      if (label === '內充') {
+      if (label === this.$t('InternalTopup')) {
         this.searchOption.type = 'interCharge';
       }
-      if (label === '結算') {
+      if (label === this.$t('settle')) {
         this.searchOption.type = 'bill';
       }
       this.doSearch();
