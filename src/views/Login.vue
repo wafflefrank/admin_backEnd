@@ -3,7 +3,7 @@
     <!-- 表單資料 🥞-->
     <el-form ref="addBank_Form" :model="addForm_Data" :rules="rules" class="demo-ruleForm d-flex flex-column align-items-center justify-content-center">
       <img :src="logoSrc" alt="#" style="width: 200px; height: 200px; border-radius: 50%" />
-      <p class="mt-5 text-white fs-2">{{this.$t('welcomeBack')}} !</p>
+      <p class="mt-5 text-white fs-2">{{ this.$t('welcomeBack') }} !</p>
       <!-- 帳號 -->
       <el-form-item :label="this.$t('account')" prop="phone" class="addInput_style">
         <el-input class="contentName_style" v-model="addForm_Data.phone" :placeholder="this.$t('account')"></el-input>
@@ -33,21 +33,21 @@
         <span></span>
         <span></span>
         <span></span>
-        {{this.$t('login')}}
+        {{ this.$t('login') }}
       </a>
       <a v-if="isGoogleLogin === false" href="#" class="px-5" @click.prevent="login()">
         <span></span>
         <span></span>
         <span></span>
         <span></span>
-        {{this.$t('login')}}
+        {{ this.$t('login') }}
       </a>
       <a v-if="isGoogleLogin === true" href="#" class="px-5" @click.prevent="login_withGoogle()">
         <span></span>
         <span></span>
         <span></span>
         <span></span>
-        {{this.$t('login')}}
+        {{ this.$t('login') }}
       </a>
     </el-form>
   </div>
@@ -206,7 +206,9 @@ export default {
           }
         } else {
           console.log(this.isGoogleLogin, '啟動');
-          this.isGoogleLogin = true;
+          if (this.isGoogleLogin === true) {
+            this.isGoogleLogin = true;
+          }
         }
 
         // this.reload_Captcha();
