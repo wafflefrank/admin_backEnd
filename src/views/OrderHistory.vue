@@ -213,9 +213,9 @@
             </div>
             <div class="d-flex flex-column align-items-center justify-content-center">
               <div class="d-flex justify-content-center">
-                <el-button color="#faa30d" class="datePick_btn px-4 py-4 mt-4 fw-bold fs-6" size="small" @click="openExcelModal()">{{ this.$t('today') }}</el-button>
-                <el-button color="#faa30d" class="datePick_btn px-4 py-4 mt-4 fw-bold fs-6" size="small" @click="openExcelModal()">{{ this.$t('last3Days') }}</el-button>
-                <el-button color="#faa30d" class="datePick_btn px-4 py-4 mt-4 fw-bold fs-6" size="small" @click="openExcelModal()">{{ this.$t('last7Days') }}</el-button>
+                <el-button color="#faa30d" class="datePick_btn px-4 py-4 mt-4 fw-bold fs-6" size="small" @click="timeRange(this.$t('today'))">{{ this.$t('today') }}</el-button>
+                <el-button color="#faa30d" class="datePick_btn px-4 py-4 mt-4 fw-bold fs-6" size="small" @click="timeRange(this.$t('last3Days'))">{{ this.$t('last3Days') }}</el-button>
+                <el-button color="#faa30d" class="datePick_btn px-4 py-4 mt-4 fw-bold fs-6" size="small" @click="timeRange(this.$t('last7Days'))">{{ this.$t('last7Days') }}</el-button>
               </div>
               <div class="d-flex justify-content-center">
                 <el-button color="#faa30d" class="export_btn p-4 mt-4 fw-bold fs-5 align-content-center" size="default" @click="getExcel()">{{ this.$t('confirm') }}</el-button>
@@ -308,8 +308,8 @@ export default {
       excelDialogVisible: false, // excel彈窗
       excelDate_one: '',
       excelDate_two: '',
-      type: 'createdAt',
-      lang: 'chinese',
+      type: this.$t('creatTime'),
+      lang: this.$t('Chinese'),
       // 加載
       loading_table: false,
     };
@@ -521,7 +521,41 @@ export default {
     },
     timeDate(label) {
       console.log(label);
-      this.type = label;
+      if (label === this.$t('creatTime')) {
+        this.type = this.$t('creatTime');
+      }
+      if (label === this.$t('paymentTime')) {
+        this.type = this.$t('paymentTime');
+      }
+    },
+    changelang(label) {
+      console.log(label);
+      if (label === this.$t('Chinese')) {
+        this.type = this.$t('Chinese');
+      }
+      if (label === this.$t('English')) {
+        this.type = this.$t('English');
+      }
+    },
+    timeRange(range) {
+      if (range === this.$t('today')) {
+        this.excelDate_one = this.$filters.dateTime(moment(new Date()).utc().subtract(1, 'days').format());
+        this.excelDate_two = this.$filters.dateTime(moment(new Date()).utc().format());
+        console.log(this.excelDate_one, this.excelDate_two);
+      }
+      if (range === this.$t('last3Days')) {
+        this.excelDate_one = this.$filters.dateTime(moment(new Date()).utc().subtract(3, 'days').format());
+        this.excelDate_two = this.$filters.dateTime(moment(new Date()).utc().format());
+
+        console.log(this.excelDate_one, this.excelDate_two);
+      }
+      if (range === this.$t('last7Days')) {
+        this.excelDate_one = this.$filters.dateTime(moment(new Date()).utc().subtract(7, 'days').format());
+        this.excelDate_two = this.$filters.dateTime(moment(new Date()).utc().format());
+
+        console.log(this.excelDate_one, this.excelDate_two);
+      }
+      window.open(`/api/getOrderExcel/${this.excelDate_one}to${this.excelDate_two}.csv?dateType=${this.type}&lang=${this.lang}`, '_blank;');
     },
     // 千分位
     stateFormat(row, column, cellValue) {
@@ -732,6 +766,8 @@ export default {
     },
     getExcel() {
       console.log(this.dateRange[0], this.dateRange[1]);
+      const isTrue = moment(this.dateRange[0]).add(31, 'day').isSameOrAfter(moment(this.dateRange[1]), 'day');
+      console.log(isTrue);
       if (this.dateRange[0] || this.dateRange[1] !== undefined) {
         // this.dateRange[0] = moment(this.dateRange[0]).utc().format();
         // this.dateRange[1] = moment(this.dateRange[1]).add(1, 'days').utc().format();
@@ -739,10 +775,10 @@ export default {
         this.excelDate_two = this.$filters.dateTime(this.dateRange[1]);
         console.log(this.excelDate_one);
         console.log(this.excelDate_two);
-        // if (!isTrue) {
-        //   ElMessage({ showClose: true, message: '最多仅支持导出31天数据', type: 'error' });
-        //   return;
-        // }
+        if (!isTrue) {
+          ElMessage({ showClose: true, message: '最多僅支持導出31天數據', type: 'error' });
+          return;
+        }
         // if (!this.url) {
         //   ElMessage({ showClose: true, message: '缺少参数，请刷新页面', type: 'error' });
         //   return;
@@ -759,6 +795,8 @@ export default {
   },
   created() {
     this.searchDate();
+    this.timeDate();
+    this.changelang();
   },
 };
 </script>

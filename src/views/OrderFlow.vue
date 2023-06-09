@@ -216,7 +216,7 @@
             <el-pagination :page-sizes="[10, 30, 50, 100]" layout="sizes,prev, pager, next" :total="totalPage" class="pageStyle d-flex flex-row-reverse" v-model:page-size="pageSize" :current-page="currentPage" @current-change="handleCurrentChange" @size-change="sizeChange"> </el-pagination>
           </div>
           <!-- EXCEL導出彈窗 -->
-          <el-dialog class="excelModel_style" v-model="excelDialogVisible" :title="this.$t('choose_range')" width="20%" center>
+          <!-- <el-dialog class="excelModel_style" v-model="excelDialogVisible" :title="this.$t('choose_range')" width="20%" center>
             <div class="d-flex flex-column align-items-start">
               <span class="mb-2 fs-5 text-deep2">{{ this.$t('dateRange') }}</span>
               <el-date-picker class="mb-4" v-model="dateRange" type="daterange" range-separator="to" :start-placeholder="this.$t('startTime')" :end-placeholder="this.$t('endTime')" />
@@ -240,6 +240,36 @@
               </div>
               <el-button color="#faa30d" class="export_btn p-4 mt-4 fw-bold fs-5 align-self-center" size="default" @click="openExcelModal()">{{ this.$t('confirm') }}</el-button>
             </div>
+          </el-dialog> -->
+          <!-- EXCEL導出彈窗 -->
+          <el-dialog class="excelModel_style" v-model="excelDialogVisible" :title="this.$t('choose_range')" center>
+            <div class="d-flex flex-column align-items-start">
+              <span class="mb-2 fs-5 text-deep2">{{ this.$t('dateRange') }}</span>
+              <el-date-picker class="mb-4" v-model="dateRange" type="daterange" range-separator="to" :start-placeholder="this.$t('startTime')" :end-placeholder="this.$t('endTime')" />
+              <span class="mb-2 fs-5">{{ this.$t('timeType') }}</span>
+              <el-radio-group class="mb-4" v-model="type" @change="timeDate(type)">
+                <el-radio-button :label="this.$t('creatTime')" />
+                <el-radio-button :label="this.$t('paymentTime')" />
+              </el-radio-group>
+
+              <span class="mb-2 fs-5">{{ this.$t('language') }}</span>
+              <el-radio-group class="mb-4" v-model="lang" @change="changelang(language)">
+                <el-radio-button :label="this.$t('Chinese')" />
+                <el-radio-button :label="this.$t('English')" />
+              </el-radio-group>
+
+              <span class="mb-2 fs-5">{{ this.$t('quickExport') }}</span>
+            </div>
+            <div class="d-flex flex-column align-items-center justify-content-center">
+              <div class="d-flex justify-content-center">
+                <el-button color="#faa30d" class="datePick_btn px-4 py-4 mt-4 fw-bold fs-6" size="small" @click="timeRange(this.$t('today'))">{{ this.$t('today') }}</el-button>
+                <el-button color="#faa30d" class="datePick_btn px-4 py-4 mt-4 fw-bold fs-6" size="small" @click="timeRange(this.$t('last3Days'))">{{ this.$t('last3Days') }}</el-button>
+                <el-button color="#faa30d" class="datePick_btn px-4 py-4 mt-4 fw-bold fs-6" size="small" @click="timeRange(this.$t('last7Days'))">{{ this.$t('last7Days') }}</el-button>
+              </div>
+              <div class="d-flex justify-content-center">
+                <el-button color="#faa30d" class="export_btn p-4 mt-4 fw-bold fs-5 align-content-center" size="default" @click="getExcel()">{{ this.$t('confirm') }}</el-button>
+              </div>
+            </div>
           </el-dialog>
         </div>
       </div>
@@ -249,7 +279,7 @@
 
 <script>
 import _ from 'lodash';
-// import { ElMessage } from 'element-plus';
+import { ElMessage } from 'element-plus';
 // import table2excel from 'js-table2excel';
 import moment from 'moment';
 
@@ -332,8 +362,8 @@ export default {
       excelDialogVisible: false, // excel彈窗
       excelDate_one: '',
       excelDate_two: '',
-      type: 'createdAt',
-      lang: 'chinese',
+      type: this.$t('creatTime'),
+      lang: this.$t('Chinese'),
       // 加載
       loading_table: false,
       loading: false,
@@ -656,27 +686,72 @@ export default {
       this.currentPage = 1;
       this.doSearch();
     },
+    timeDate(label) {
+      console.log(label);
+      if (label === this.$t('creatTime')) {
+        this.type = this.$t('creatTime');
+      }
+      if (label === this.$t('paymentTime')) {
+        this.type = this.$t('paymentTime');
+      }
+    },
+    changelang(label) {
+      console.log(label);
+      if (label === this.$t('Chinese')) {
+        this.type = this.$t('Chinese');
+      }
+      if (label === this.$t('English')) {
+        this.type = this.$t('English');
+      }
+    },
+    timeRange(range) {
+      if (range === this.$t('today')) {
+        this.excelDate_one = this.$filters.dateTime(moment(new Date()).utc().subtract(1, 'days').format());
+        this.excelDate_two = this.$filters.dateTime(moment(new Date()).utc().format());
+        console.log(this.excelDate_one, this.excelDate_two);
+      }
+      if (range === this.$t('last3Days')) {
+        this.excelDate_one = this.$filters.dateTime(moment(new Date()).utc().subtract(3, 'days').format());
+        this.excelDate_two = this.$filters.dateTime(moment(new Date()).utc().format());
+
+        console.log(this.excelDate_one, this.excelDate_two);
+      }
+      if (range === this.$t('last7Days')) {
+        this.excelDate_one = this.$filters.dateTime(moment(new Date()).utc().subtract(7, 'days').format());
+        this.excelDate_two = this.$filters.dateTime(moment(new Date()).utc().format());
+
+        console.log(this.excelDate_one, this.excelDate_two);
+      }
+      window.open(`/api/getFundDetail/${this.excelDate_one}to${this.excelDate_two}.csv?dateType=${this.type}&lang=${this.lang}`, '_blank;');
+    },
     // EXCEL彈窗
     openExcelModal() {
       this.excelDialogVisible = true;
     },
     getExcel() {
-      this.dateRange[0] = moment(this.dateRange[0]).utc().format();
-      this.dateRange[1] = moment(this.dateRange[1]).utc().format();
-      this.excelDate_one = this.$filters.dateTime(this.dateRange[0]);
-      this.excelDate_two = this.$filters.dateTime(this.dateRange[1]);
-      console.log(this.excelDate_one);
-      console.log(this.excelDate_two);
-      // if (!isTrue) {
-      //   ElMessage({ showClose: true, message: '最多仅支持导出31天数据', type: 'error' });
-      //   return;
-      // }
-      // if (!this.url) {
-      //   ElMessage({ showClose: true, message: '缺少参数，请刷新页面', type: 'error' });
-      //   return;
-      // }
+      console.log(this.dateRange[0], this.dateRange[1]);
+      const isTrue = moment(this.dateRange[0]).add(31, 'day').isSameOrAfter(moment(this.dateRange[1]), 'day');
+      console.log(isTrue);
+      if (this.dateRange[0] || this.dateRange[1] !== undefined) {
+        // this.dateRange[0] = moment(this.dateRange[0]).utc().format();
+        // this.dateRange[1] = moment(this.dateRange[1]).add(1, 'days').utc().format();
+        this.excelDate_one = this.$filters.dateTime(this.dateRange[0]);
+        this.excelDate_two = this.$filters.dateTime(this.dateRange[1]);
+        console.log(this.excelDate_one);
+        console.log(this.excelDate_two);
+        if (!isTrue) {
+          ElMessage({ showClose: true, message: '最多僅支持導出31天數據', type: 'error' });
+          return;
+        }
+        // if (!this.url) {
+        //   ElMessage({ showClose: true, message: '缺少参数，请刷新页面', type: 'error' });
+        //   return;
+        // }
 
-      window.open(`/api/getOrderExcel/${this.excelDate_one}to${this.excelDate_two}.csv?dateType=${this.type}&lang=${this.lang}`, '_blank;');
+        window.open(`/api/getFundDetail/${this.excelDate_one}to${this.excelDate_two}.csv?dateType=${this.type}&lang=${this.lang}`, '_blank;');
+      } else {
+        ElMessage({ showClose: true, message: '請選擇日期', type: 'error' });
+      }
     },
     test(row) {
       console.log(row);
