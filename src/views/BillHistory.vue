@@ -188,14 +188,14 @@
               <el-date-picker class="mb-4" v-model="dateRange" type="daterange" range-separator="to" :start-placeholder="this.$t('startTime')" :end-placeholder="this.$t('endTime')" />
               <span class="mb-2 fs-5">{{ this.$t('timeType') }}</span>
               <el-radio-group class="mb-4" v-model="type" @change="timeDate(type)">
-                <el-radio-button :label="this.$t('creatTime')" />
-                <el-radio-button :label="this.$t('paymentTime')" />
+                <el-radio-button :label="this.$t('creatTime')" @click="date1()" />
+                <el-radio-button :label="this.$t('paymentTime')" @click="date2()" />
               </el-radio-group>
 
               <span class="mb-2 fs-5">{{ this.$t('language') }}</span>
-              <el-radio-group class="mb-4" v-model="lang" @change="changelang(language)">
-                <el-radio-button :label="this.$t('Chinese')" />
-                <el-radio-button :label="this.$t('English')" />
+              <el-radio-group class="mb-4" v-model="lang" @change="changelang(lang)">
+                <el-radio-button :label="this.$t('Chinese')" @click="lang1()" />
+                <el-radio-button :label="this.$t('English')" @click="lang2()" />
               </el-radio-group>
 
               <span class="mb-2 fs-5">{{ this.$t('quickExport') }}</span>
@@ -246,6 +246,7 @@ export default {
       },
       timeValue: '',
       radio2: '今天', // 時間區間
+      dateRange: '', // excel導出日期
       // 下方訂單Table
       orderTable: [],
 
@@ -517,25 +518,43 @@ export default {
       if (!bellValue.includes('.')) bellValue += '.';
       return bellValue.replace(/(\d)(?=(\d{3})+\.)/g, ($0, $1) => `${$1},`).replace(/\.$/, '');
     },
-    timeDate(label) {
-      console.log(label);
-      if (label === this.$t('creatTime')) {
+    timeDate(type) {
+      console.log(type);
+      if (type === this.$t('creatTime')) {
         this.type = this.$t('creatTime');
       }
-      if (label === this.$t('paymentTime')) {
+      if (type === this.$t('paymentTime')) {
         this.type = this.$t('paymentTime');
       }
     },
-    changelang(label) {
-      console.log(label);
-      if (label === this.$t('Chinese')) {
-        this.type = this.$t('Chinese');
+    date1() {
+      this.type = 'createdAt';
+    },
+    date2() {
+      this.type = 'paidAt';
+    },
+    changelang(lang) {
+      console.log(lang);
+      if (lang === this.$t('Chinese')) {
+        this.lang = this.$t('Chinese');
       }
-      if (label === this.$t('English')) {
-        this.type = this.$t('English');
+      if (lang === this.$t('English')) {
+        this.lang = this.$t('English');
       }
     },
+    lang1() {
+      this.lang = 'chinese';
+    },
+    lang2() {
+      this.lang = 'english';
+    },
     timeRange(range) {
+      if (this.type === this.$t('creatTime')) {
+        this.type = 'createdAt';
+      }
+      if (this.type === this.$t('Chinese')) {
+        this.lang = 'chinese';
+      }
       if (range === this.$t('today')) {
         this.excelDate_one = this.$filters.dateTime(moment(new Date()).utc().subtract(1, 'days').format());
         this.excelDate_two = this.$filters.dateTime(moment(new Date()).utc().format());
@@ -723,7 +742,12 @@ export default {
         //   ElMessage({ showClose: true, message: '缺少参数，请刷新页面', type: 'error' });
         //   return;
         // }
-
+        if (this.type === this.$t('creatTime')) {
+          this.type = 'createdAt';
+        }
+        if (this.type === this.$t('Chinese')) {
+          this.lang = 'chinese';
+        }
         window.open(`/api/getBillExcel/${this.excelDate_one}to${this.excelDate_two}.csv?dateType=${this.type}&lang=${this.lang}`, '_blank;');
       } else {
         ElMessage({ showClose: true, message: '請選擇日期', type: 'error' });
