@@ -33,7 +33,7 @@
             </div>
             <div>
               <div class="numbers">
-                <p class="mb-3 text-sm  font-weight-bold fs-5">{{ this.$t('awaitingPayment') }}</p>
+                <p class="mb-3 text-sm font-weight-bold fs-5">{{ this.$t('awaitingPayment') }}</p>
                 <h4 class="font-weight-bolder">${{ this.lockedAmount }}</h4>
                 <!-- <span class="text-sm text-success fw-bold">+3%</span> since last week -->
               </div>
@@ -53,7 +53,7 @@
             </div>
             <div class="">
               <div class="numbers">
-                <p class="mb-3 text-sm  font-weight-bold fs-5">{{ this.$t('transactionMonth') }}</p>
+                <p class="mb-3 text-sm font-weight-bold fs-5">{{ this.$t('transactionMonth') }}</p>
                 <h4 class="font-weight-bolder">${{ this.OrderTotal.monthTotal }}</h4>
                 <!-- <span class="text-sm text-danger">-2%</span> since last quarter -->
               </div>
@@ -73,7 +73,7 @@
             </div>
             <div class="">
               <div class="numbers">
-                <p class="mb-3 text-sm  font-weight-bold fs-5">{{ this.$t('amountThisMonth') }}</p>
+                <p class="mb-3 text-sm font-weight-bold fs-5">{{ this.$t('amountThisMonth') }}</p>
                 <h4 class="font-weight-bolder">{{ this.ThisMonthNums }}</h4>
                 <!-- <span class="text-sm text-success">+5%</span> than last month -->
               </div>
@@ -97,14 +97,18 @@
           <div class="d-flex align-items-center">
             <p class="mb-0 fs-5 text-light me-5">{{ this.$t('todayTransaction') }}</p>
             <h5 class="mb-0">
-              <span class="text-white font-13">{{ this.todayOrder_amount }}<span class="fs-6">{{ this.$t('unit') }}</span></span>
+              <span class="text-white font-13"
+                >{{ this.todayOrder_amount }}<span class="fs-6">{{ this.$t('unit') }}</span></span
+              >
             </h5>
           </div>
           <div class="vr"></div>
           <div class="d-flex align-items-center">
             <p class="mb-0 fs-5 text-light me-5">{{ this.$t('todayOrders') }}</p>
             <h5 class="mb-0">
-              <span class="text-white font-13">{{ this.todayOrder_count }}<span class="fs-6">{{ this.$t('unit') }}</span></span>
+              <span class="text-white font-13"
+                >{{ this.todayOrder_count }}<span class="fs-6">{{ this.$t('unit') }}</span></span
+              >
             </h5>
           </div>
         </div>
@@ -125,7 +129,7 @@
     <div class="d-flex align-items-center chooseBill_style">
       <span>{{ this.$t('settlement_account') }}</span>
       <el-select class="chooseBank_style" v-model="billAdd_Form.bankOwner" :placeholder="this.$t('choose_account')" @change="chooseBank_name(billAdd_Form.bankOwner)" clearable>
-        <el-option v-for="item in bankCard" :value="item.id" :key="item.bankOwner" :label="item.bankOwner"></el-option>
+        <el-option v-for="item in bankCard" :value="item.id" :key="item.bankOwner" :label="`${item.bankOwner} ｜ ${item.bankAccount}`"></el-option>
       </el-select>
     </div>
     <div class="d-flex align-items-center chooseBill_style">
@@ -134,10 +138,16 @@
         <el-option v-for="item in bankCard" :value="item.id" :key="item" :label="item.bankName"></el-option>
       </el-select>
     </div>
-    <el-input class="addInfo_style mt-3" v-model="billAdd_Form.amount" :placeholder="this.$t('settlement_amount')" oninput="value=value.replace(/[^0-9.]/g,'')"> <template #prepend>{{ this.$t('settlement_amount') }}</template> </el-input>
+    <el-input class="addInfo_style mt-3" v-model="billAdd_Form.amount" :placeholder="this.$t('settlement_amount')" oninput="value=value.replace(/[^0-9.]/g,'')">
+      <template #prepend>{{ this.$t('settlement_amount') }}</template>
+    </el-input>
     <div class="d-flex align-items-center">
-      <el-input class="addInfo_style mt-3" v-model="billAdd_Form.paidPassword" :placeholder="this.$t('Transaction_pwd')" type="password"> <template #prepend>{{ this.$t('Transaction_pwd') }}</template> </el-input>
-      <div @click="resetPwd()" @keydown="resetPwd()" class="resetPwd_style mt-3"><span class="text-white">{{ this.$t('Transaction_resetPwd') }}</span></div>
+      <el-input class="addInfo_style mt-3" v-model="billAdd_Form.paidPassword" :placeholder="this.$t('Transaction_pwd')" type="password">
+        <template #prepend>{{ this.$t('Transaction_pwd') }}</template>
+      </el-input>
+      <div @click="resetPwd()" @keydown="resetPwd()" class="resetPwd_style mt-3">
+        <span class="text-white">{{ this.$t('Transaction_resetPwd') }}</span>
+      </div>
     </div>
     <div class="d-flex flex-column align ms-4">
       <div class="d-flex mt-5">
@@ -156,15 +166,21 @@
     </div>
   </el-dialog>
   <!-- 重置密碼彈窗 -->
-  <el-dialog class="billModel_style" v-model="resetPwdVisible" :title=" this.$t('Setting_pwd')" width="50%" center>
-    <el-input class="addInfo_style mt-3" v-model="resetPwd_Form.paidPassword" :placeholder="this.$t('Transaction_pwd')" type="password"> <template #prepend>{{ this.$t('Transaction_pwd') }}</template> </el-input>
+  <el-dialog class="billModel_style" v-model="resetPwdVisible" :title="this.$t('Setting_pwd')" width="50%" center>
+    <el-input class="addInfo_style mt-3" v-model="resetPwd_Form.paidPassword" :placeholder="this.$t('Transaction_pwd')" type="password">
+      <template #prepend>{{ this.$t('Transaction_pwd') }}</template>
+    </el-input>
 
-    <el-input class="addInfo_style mt-3" v-model="paidPassword_sec" :placeholder="this.$t('confirm_pwd')" type="password"> <template #prepend>{{ this.$t('confirm_pwd') }}</template> </el-input>
+    <el-input class="addInfo_style mt-3" v-model="paidPassword_sec" :placeholder="this.$t('confirm_pwd')" type="password">
+      <template #prepend>{{ this.$t('confirm_pwd') }}</template>
+    </el-input>
     <div class="d-flex" style="margin-left: 200px">
       <span class="fs-6 text-deep-danger fw-bold me-2">※</span>
       <span class="fs-6 text-white">{{ this.$t('rule_pwd') }}</span>
     </div>
-    <el-input class="addInfo_style mt-3" v-model="resetPwd_Form.googleVerifyCode" :placeholder="this.$t('googleCode')"> <template #prepend>{{ this.$t('googleCode') }}</template> </el-input>
+    <el-input class="addInfo_style mt-3" v-model="resetPwd_Form.googleVerifyCode" :placeholder="this.$t('googleCode')">
+      <template #prepend>{{ this.$t('googleCode') }}</template>
+    </el-input>
 
     <div class="d-flex justify-content-center">
       <el-button color="#faa30d" class="save_btn p-4 mt-4 fw-bold fs-5 align-self-center" size="default" @click="savePwd()">{{ this.$t('Save') }}</el-button>
@@ -530,7 +546,7 @@ export default {
 .addInfo_style {
   width: 80%;
   --el-input-focus-border-color: #faa30d;
-  padding: 10px 200px;
+  padding: 10px 100px 10px 100px;
   & :deep(.el-input__inner) {
     padding: 25px 0 25px 0px;
     // border-radius: 50px;
@@ -548,7 +564,8 @@ export default {
 .chooseBill_style {
   width: 100%;
   --el-select-input-focus-border-color: #faa30d !important;
-  padding: 10px 200px;
+  // display: flex;
+  padding: 10px 100px 10px 100px;
   & span {
     border-top-left-radius: 50px;
     border-bottom-left-radius: 50px;
