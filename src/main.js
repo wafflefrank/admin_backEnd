@@ -1,8 +1,8 @@
 import { createApp } from 'vue';
-// axios
-import axios from 'axios';
-// VueAxios
-import VueAxios from 'vue-axios';
+// axios（原本使用的 HTTP 客戶端，已改為使用本地 mock）
+// import axios from 'axios';
+// VueAxios（原本透過 plugin 綁定 this.$http，現在改為自行綁定 mockHttp）
+// import VueAxios from 'vue-axios';
 // font-awesome
 import { library } from '@fortawesome/fontawesome-svg-core';
 // font-awesome
@@ -35,6 +35,7 @@ import 'bootstrap/dist/js/bootstrap';
 import App from './App.vue';
 import router from './router';
 import '@fortawesome/fontawesome-free/css/all.css';
+import mockHttp from './mockApi';
 
 const app = createApp(App);
 // 全局註冊icons
@@ -98,6 +99,9 @@ app.use(i18n);
 app.use(_);
 app.use(VueSweetalert2);
 app.use(router);
-app.use(VueAxios, axios);
+// 原本使用 axios + VueAxios 綁定 this.$http 的設定，已改為使用本地 mock HTTP
+// app.use(VueAxios, axios);
+// 改用本地 mockHttp 作為全域 $http，所有 this.$http.get/post 都會走測試資料
+app.config.globalProperties.$http = mockHttp;
 app.use(ElementPlus, { locale });
 app.mount('#app');

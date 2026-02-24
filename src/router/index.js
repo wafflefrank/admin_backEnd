@@ -1,6 +1,7 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
 import { ElMessage } from 'element-plus';
-import axios from 'axios';
+// import axios from 'axios';
+import mockHttp from '../mockApi';
 import HomeView from '../views/HomeView.vue';
 
 const routes = [
@@ -10,7 +11,7 @@ const routes = [
     component: HomeView,
     redirect: { name: '我的帳號' },
     meta: {
-      requireAuth: true, // 判斷是否需要驗證會員登入
+      requireAuth: false, // 判斷是否需要驗證會員登入
     },
     children: [
       {
@@ -81,20 +82,23 @@ const router = createRouter({
   routes,
 });
 router.beforeEach((to, from, next) => {
-  axios.get('/open/siteInfo').then((res) => {
+  // 原本透過 axios 取得站點資訊，已改為使用本地 mockHttp
+  // axios.get('/open/siteInfo').then((res) => {
+  //   console.log(res.data.data.name);
+  //   document.title = `${res.data.data.name}後臺管理系統`;
+  // });
+  mockHttp.get('/open/siteInfo').then((res) => {
     console.log(res.data.data.name);
     document.title = `${res.data.data.name}後臺管理系統`;
   });
   if (to.matched.some((m) => m.meta.requireAuth)) {
-    axios.get('/api/myInfo').then((res) => {
-      console.log('抓到後台登入狀態了', res.data);
-      // 對路由進行驗證
+    // 原本用 axios 檢查登入狀態，現在一樣走 mockHttp 但流程保持不變
+    mockHttp.get('/api/myInfo').then((res) => {
+      console.log('抓到後台登入狀態了 (mock)', res.data);
       if (res.data.code === 200) {
-        console.log('後臺成功登入', res.data);
-        // 已經登陸
-        next(); // 正常跳轉到你設定好的頁面
+        console.log('後臺成功登入 (mock)', res.data);
+        next();
       } else {
-        // 未登入則跳轉到登陸介面
         ElMessage({ showClose: true, message: '已登出,請先登入!', type: 'warning' });
         next({ path: '/login' });
       }

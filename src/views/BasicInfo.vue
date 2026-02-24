@@ -45,29 +45,29 @@
               </div>
               <div class="d-flex flex-row-reverse justify-content-center">
                 <div>
-                  <div class="text-start">
+                  <div class="text-start merchant-info-text">
                     <!-- ID -->
-                    <p class="mb-1 fs-5 text-sm font-weight-bold fw-bold">
+                    <p class="mb-1 fs-6 text-sm font-weight-bold fw-bold">
                       {{ this.$t('merchantID') }} : <span class="ms-2">{{ this.memberID }}</span>
                     </p>
                     <!-- key -->
-                    <div class="d-flex align-items-center">
-                      <p class="mb-0 fs-5 text-sm font-weight-bold fw-bold">{{ this.$t('key') }} :</p>
+                    <div class="d-flex align-items-center flex-wrap">
+                      <p class="mb-0 fs-6 text-sm font-weight-bold fw-bold">{{ this.$t('key') }} :</p>
                       <span class="ms-2 fw-bold">******</span>
                       <el-button class="check_key_btn fw-bold ms-2" color="#faa30d" size="small" @click="centerDialogVisible = true">{{ this.$t('check') }}</el-button>
                     </div>
                     <!-- name -->
-                    <div class="mb-1 mt-1 fs-5 text-sm font-weight-bold fw-bold d-flex">
+                    <div class="mb-1 mt-1 fs-6 text-sm font-weight-bold fw-bold d-flex flex-wrap">
                       <p class="fw-bold me-2">{{ this.$t('name') }} :</p>
                       <span class="fw-bold">{{ this.memberName }}</span>
                     </div>
                     <!-- account -->
-                    <div class="mb-1 mt-1 fs-5 text-sm font-weight-bold fw-bold d-flex">
+                    <div class="mb-1 mt-1 fs-6 text-sm font-weight-bold fw-bold d-flex flex-wrap">
                       <p class="fw-bold me-2">{{ this.$t('account') }} :</p>
                       <span class="fw-bold">{{ this.memberPhone }}</span>
                     </div>
                     <!-- bank card -->
-                    <div class="mb-1 mt-1 fs-5 text-sm font-weight-bold fw-bold d-flex align-items-center">
+                    <div class="mb-1 mt-1 fs-6 text-sm font-weight-bold fw-bold d-flex align-items-center flex-wrap">
                       <p class="fw-bold">
                         {{ this.$t('bankCard') }} : <span class="text-deep2-danger">{{ this.bankNums }}</span> {{ this.$t('cards') }}
                       </p>
@@ -121,7 +121,7 @@
           </div>
         </div>
 
-        <span class="text-deep2">{{ this.$t('registTime') }} : {{ this.registTime }} </span>
+        <span class="text-deep2 regist-time-text">{{ this.$t('registTime') }} : {{ this.registTime }} </span>
       </div>
     </div>
   </div>
@@ -485,6 +485,21 @@ export default {
   -moz-box-shadow: 0px 0px 19px 2px rgba(242, 242, 242, 0.61);
   margin-bottom: 1.5rem;
   border: 0 solid transparent;
+  // 響應式調整，避免在 768px 時溢出
+  @media (max-width: 768px) {
+    padding: 0.75rem !important;
+    > .mx-4 {
+      margin-left: 0.5rem !important;
+      margin-right: 0.5rem !important;
+    }
+  }
+  @media (max-width: 576px) {
+    padding: 0.5rem !important;
+    > .mx-4 {
+      margin-left: 0.25rem !important;
+      margin-right: 0.25rem !important;
+    }
+  }
 }
 // 卡片長條樣式
 .card_lightStyle {
@@ -495,9 +510,125 @@ export default {
   box-shadow: 0 0.3rem 0.8rem rgb(0 0 0 / 12%);
   margin-bottom: 1.5rem;
   border: 0 solid transparent;
+  // 商戶資訊文字樣式
+  .merchant-info-text {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    p,
+    span {
+      word-break: break-word;
+    }
+  }
+  // 調整內部 margin，避免在響應式時溢出
+  > .mx-4 {
+    @media (max-width: 768px) {
+      margin-left: 0.5rem !important;
+      margin-right: 0.5rem !important;
+    }
+    @media (max-width: 576px) {
+      margin-left: 0.25rem !important;
+      margin-right: 0.25rem !important;
+    }
+  }
+  // 響應式字體大小調整
+  @media (max-width: 992px) {
+    padding: 12px 0;
+    margin-left: 0.5rem !important;
+    margin-right: 0.5rem !important;
+    .card-body {
+      padding: 0.75rem !important;
+    }
+    // 調整文字大小
+    .merchant-info-text {
+      p,
+      span {
+        font-size: 0.875rem !important; // 14px
+      }
+      .fs-6 {
+        font-size: 0.875rem !important; // 覆蓋 Bootstrap 的 fs-6
+      }
+    }
+    // 調整按鈕大小
+    .el-button {
+      font-size: 0.75rem !important;
+      padding: 4px 8px !important;
+    }
+  }
+  @media (max-width: 768px) {
+    padding: 10px 0;
+    margin-left: 0.25rem !important;
+    margin-right: 0.25rem !important;
+    .card-body {
+      padding: 0.5rem !important;
+    }
+    // 進一步縮小字體
+    .merchant-info-text {
+      p,
+      span {
+        font-size: 0.75rem !important; // 12px
+      }
+      .fs-6 {
+        font-size: 0.75rem !important;
+      }
+    }
+    // 調整按鈕大小
+    .el-button {
+      font-size: 0.7rem !important;
+      padding: 3px 6px !important;
+      min-height: auto !important;
+    }
+    // 調整圖標大小
+    .merchant-icon {
+      max-width: 80px !important;
+      width: 80px !important;
+      max-height: 80px !important;
+    }
+    // 確保 flex 容器可以換行
+    .d-flex {
+      flex-wrap: wrap;
+    }
+  }
+  @media (max-width: 576px) {
+    padding: 8px 0;
+    margin-left: 0.15rem !important;
+    margin-right: 0.15rem !important;
+    .card-body {
+      padding: 0.4rem !important;
+    }
+    .merchant-info-text {
+      p,
+      span {
+        font-size: 0.7rem !important; // 11.2px
+      }
+      .fs-6 {
+        font-size: 0.7rem !important;
+      }
+    }
+    .el-button {
+      font-size: 0.65rem !important;
+      padding: 2px 5px !important;
+    }
+    .merchant-icon {
+      max-width: 60px !important;
+      width: 60px !important;
+      max-height: 60px !important;
+    }
+  }
 }
 .radius-10 {
   border-radius: 20px;
+}
+// 註冊時間響應式樣式
+.regist-time-text {
+  font-size: 0.875rem;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  @media (max-width: 768px) {
+    font-size: 0.75rem !important;
+  }
+  @media (max-width: 576px) {
+    font-size: 0.7rem !important;
+  }
 }
 .key_style .el-dialog__title {
   font-size: 20px;
@@ -590,6 +721,29 @@ export default {
   height: 0px !important;
   background-color: transparent !important;
 }
-// .check_key_btn {
-// }
+// 按鈕響應式樣式
+.check_key_btn,
+.invite_friend_btn {
+  white-space: nowrap;
+  @media (max-width: 768px) {
+    font-size: 0.7rem !important;
+    padding: 3px 6px !important;
+    min-height: auto !important;
+  }
+  @media (max-width: 576px) {
+    font-size: 0.65rem !important;
+    padding: 2px 5px !important;
+  }
+}
+// 登入歷史按鈕（較大的按鈕）
+.invite_friend_btn.mt-1 {
+  @media (max-width: 768px) {
+    padding: 8px 16px !important;
+    font-size: 0.875rem !important;
+  }
+  @media (max-width: 576px) {
+    padding: 6px 12px !important;
+    font-size: 0.75rem !important;
+  }
+}
 </style>

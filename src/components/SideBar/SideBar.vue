@@ -1,7 +1,43 @@
 <template>
   <header class="main-head" :class="[isExpand === false ? 'main_expand' : 'main-head']">
-    <img v-if="isExpand === true" class="home_logo" :src="logoSrc" alt="#" />
-    <img v-if="isExpand === false" class="home_logo_close" :src="logoSrc" alt="#" />
+    <div v-if="isExpand === true" class="home_logo logo-icon">
+      <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="50" cy="50" r="48" fill="#F2EFE9" stroke="#6C7059" stroke-width="2" />
+        <rect
+          x="25"
+          y="25"
+          width="50"
+          height="50"
+          rx="5"
+          fill="#Cbaacb"
+          style="fill: #d4a373"
+        />
+        <line x1="41" y1="25" x2="41" y2="75" stroke="#8B5E3C" stroke-width="3" />
+        <line x1="58" y1="25" x2="58" y2="75" stroke="#8B5E3C" stroke-width="3" />
+        <line x1="25" y1="41" x2="75" y2="41" stroke="#8B5E3C" stroke-width="3" />
+        <line x1="25" y1="58" x2="75" y2="58" stroke="#8B5E3C" stroke-width="3" />
+        <circle cx="65" cy="35" r="8" fill="#FFF8E7" />
+      </svg>
+    </div>
+    <div v-if="isExpand === false" class="home_logo_close logo-icon">
+      <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="50" cy="50" r="48" fill="#F2EFE9" stroke="#6C7059" stroke-width="2" />
+        <rect
+          x="25"
+          y="25"
+          width="50"
+          height="50"
+          rx="5"
+          fill="#Cbaacb"
+          style="fill: #d4a373"
+        />
+        <line x1="41" y1="25" x2="41" y2="75" stroke="#8B5E3C" stroke-width="3" />
+        <line x1="58" y1="25" x2="58" y2="75" stroke="#8B5E3C" stroke-width="3" />
+        <line x1="25" y1="41" x2="75" y2="41" stroke="#8B5E3C" stroke-width="3" />
+        <line x1="25" y1="58" x2="75" y2="58" stroke="#8B5E3C" stroke-width="3" />
+        <circle cx="65" cy="35" r="8" fill="#FFF8E7" />
+      </svg>
+    </div>
     <hr class="mt-0 horizontal dark bg-white" style="height: 2px" />
     <nav class="head-nav">
       <ul class="menu">
@@ -201,16 +237,16 @@ export default defineComponent({
         console.log(res.data.code);
       });
     },
-    // 獲取LOGO
-    getSiteInfo() {
-      this.$http.get('/open/siteInfo').then((res) => {
-        console.log(res.data.data);
-        this.logoSrc = res.data.data.logo;
-      });
-    },
+    // 獲取LOGO（已改用 SVG，不再需要從 API 獲取）
+    // getSiteInfo() {
+    //   this.$http.get('/open/siteInfo').then((res) => {
+    //     console.log(res.data.data);
+    //     this.logoSrc = res.data.data.logo;
+    //   });
+    // },
   },
   created() {
-    this.getSiteInfo();
+    // this.getSiteInfo(); // 已改用 SVG logo，不再需要從 API 獲取
     this.getUser_info();
   },
 });
