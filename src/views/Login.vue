@@ -131,6 +131,9 @@ export default {
     checkGoogleLogin() {
       this.$http.post('/open/checkIsGoogleLogin', this.googleForm_data).then((res) => {
         console.log(res.data.data);
+        if (res.data.data === '') {
+          this.isGoogleLogin = null;
+        }
         this.isGoogleLogin = res.data.data.isGoogleLogin;
       });
     },
